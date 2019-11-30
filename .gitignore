@@ -19,7 +19,7 @@ Homestead.json
 /public/js/manifest.*.js
 /public/js/messages.*.js
 /public/js/vendor.*.js
-/public/js/App.js
+/public/js/app.js
 /public/js/manifest.*.js
 /public/js/messages.*.js
 /public/js/vendor.js

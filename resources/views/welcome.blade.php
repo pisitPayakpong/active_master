@@ -63,7 +63,7 @@
             }
         </style>
     </head>
-    <body>
+
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
+                    <a href="https://laravel.com/docs">Docs1</a>
                     <a href="https://laracasts.com">Laracasts</a>
                     <a href="https://laravel-news.com">News</a>
                     <a href="https://blog.laravel.com">Blog</a>
@@ -94,11 +94,24 @@
                     <a href="https://github.com/laravel/laravel">GitHub</a>
                 </div>
             </div>
+            @section('content')
             <div class="content">
                 <div id="app-container"></div>
             </div>
+
+            @endsection
+            
         </div>
-        
-    </body>
-    <script type="text/javascript" src="js/app.js"></script>
+        <!-- @section('js_script') -->
+
+        <script src="/js/jstree.min.js"></script>
+        <script src="{{ mix('js/manifest.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
+        <script src="{{ mix('js/vendor.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
+        <script src="{{ mix('js/app.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
+        <!-- @endsection -->
+
+    <script  src="{{ mix('js/app.js') }}"></script>
 </html>
+
+
+
