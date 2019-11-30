@@ -12,7 +12,7 @@ if (_appDest) {
                 <nav>
                     <ul>
                         <li>
-                            <Link to="/">Home</Link>
+                            <Link to="/">Home1</Link>
                         </li>
                         <li>
                             <Link to="/about">About</Link>
