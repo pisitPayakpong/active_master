@@ -16,7 +16,7 @@ const mix = require("laravel-mix");
 //     "public/css"
 // );
 
-mix.react("resources/js/app.js", "public/js")
-    // .extract(["react", "react-dom", "react-router"])
+mix.js("resources/js/app.js", "public/js")
+    .extract(["react", "react-dom", "react-router"])
     .sass("resources/sass/app.scss", "public/css")
     .version();

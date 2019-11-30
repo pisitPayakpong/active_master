@@ -8,6 +8,7 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+        <link href=" https://cdnjs.cloudflare.com/ajax/libs/antd/3.18.2/antd.css" rel="stylesheet" type="text/css">
 
         <!-- Styles -->
         <style>
@@ -92,25 +93,16 @@
                     <a href="https://nova.laravel.com">Nova</a>
                     <a href="https://forge.laravel.com">Forge</a>
                     <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <a href='/main'>Test</a>
                 </div>
             </div>
-            @section('content')
-            <div class="content">
-                <div id="app-container"></div>
-            </div>
 
-            @endsection
             
         </div>
-        <!-- @section('js_script') -->
-
         <script src="/js/jstree.min.js"></script>
         <script src="{{ mix('js/manifest.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
         <script src="{{ mix('js/vendor.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
         <script src="{{ mix('js/app.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
-        <!-- @endsection -->
-
-    <script  src="{{ mix('js/app.js') }}"></script>
 </html>
 
 
