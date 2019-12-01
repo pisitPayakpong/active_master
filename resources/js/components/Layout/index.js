@@ -3,6 +3,7 @@ import { Layout, Breadcrumb } from "antd";
 
 import Header from "../Header";
 import Menu from "../Menu";
+import ContentRoute from "../Content";
 
 const { Content } = Layout;
 
@@ -30,16 +31,7 @@ class NavBar extends Component {
                                 <Breadcrumb.Item>List</Breadcrumb.Item>
                                 <Breadcrumb.Item>App</Breadcrumb.Item>
                             </Breadcrumb>
-                            <Content
-                                style={{
-                                    background: "#fff",
-                                    padding: 24,
-                                    margin: 0,
-                                    minHeight: 280
-                                }}
-                            >
-                                Content
-                            </Content>
+                            <ContentRoute />
                         </Layout>
                     </Layout>
                 </Layout>

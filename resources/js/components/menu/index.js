@@ -18,18 +18,32 @@ const MENU_CONFIG = [
 
 class NavBar extends Component {
     state = {
-        collapsed: false
+        collapsed: false,
+        current: "",
+        openKeys: []
     };
 
-    toggleCollapsed = () => {
+    componentDidMount() {
+        let pathname = window.location.pathname;
+        const current = pathname.substring(1).replace("/", "_");
+        let openKeys = ["0"];
+
+        this.setState({ current, openKeys });
+    }
+
+    onOpenChange = openKeys => {
         this.setState({
-            collapsed: !this.state.collapsed
+            openKeys
         });
     };
 
     renderMenuItem = subMenu => {
         return map(subMenu, (menu, key) => {
-            return <Menu.Item key={key}>{menu.title}</Menu.Item>;
+            return (
+                <Menu.Item key={menu.key}>
+                    <a href={menu.path}>{menu.title}</a>
+                </Menu.Item>
+            );
         });
     };
 
@@ -52,13 +66,15 @@ class NavBar extends Component {
     };
 
     render() {
+        const { current, openKeys } = this.state;
         return (
             <div>
                 <Sider width={200} style={{ background: "#fff" }}>
                     <Menu
                         mode="inline"
-                        defaultSelectedKeys={["1"]}
-                        defaultOpenKeys={["sub1"]}
+                        openKeys={openKeys}
+                        selectedKeys={[current]}
+                        onOpenChange={this.onOpenChange}
                         style={{ height: "100%", borderRight: 0 }}
                     >
                         {this.renderSubMenu(MENU_CONFIG)}

@@ -18,3 +18,12 @@ Route::get('/', function () {
 Route::get('/main', function() {
     return view('main');
 });
+
+Route::get('/user', function() {
+    return view('main');
+});
+
+Route::get('/water', function() {
+    return view('main');
+});
+

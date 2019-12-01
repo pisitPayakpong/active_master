@@ -100,9 +100,9 @@
             
         </div>
         <script src="/js/jstree.min.js"></script>
-        <script src="{{ mix('js/manifest.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
-        <script src="{{ mix('js/vendor.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
-        <script src="{{ mix('js/app.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
+        <script src="{{ mix('js/manifest.js')}}"></script>
+        <script src="{{ mix('js/vendor.js')}}"></script>
+        <script src="{{ mix('js/app.js')}}"></script>
 </html>
 
 
