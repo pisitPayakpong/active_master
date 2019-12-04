@@ -15,15 +15,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/main', function() {
+Route::get('/main', function () {
     return view('main');
 });
 
-Route::get('/user', function() {
+Route::get('/dashboard', function () {
     return view('main');
 });
 
-Route::get('/water', function() {
+Route::get('/user', function () {
     return view('main');
 });
 
+Route::get('/water', function () {
+    return view('main');
+});

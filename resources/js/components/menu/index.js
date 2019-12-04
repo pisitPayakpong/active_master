@@ -10,6 +10,7 @@ const MENU_CONFIG = [
         key: "Mangement",
         title: "Mangement",
         subMenu: [
+            { key: "dashboard", title: "Dashboard", path: "/dashboard" },
             { key: "user", title: "User", path: "/user" },
             { key: "water", title: "water", path: "/water" }
         ]

@@ -3,6 +3,8 @@ import { Table } from "antd";
 import axios from "axios";
 import { map } from "lodash";
 
+import LayoutContent from "../Core/LayoutContent";
+
 const columns = [
     {
         title: "id",
@@ -14,7 +16,7 @@ const columns = [
         dataIndex: "name",
         // sorter: true,
         render: name => name,
-        width: "20%"
+        width: "40%"
     },
     {
         title: "Role",
@@ -23,7 +25,7 @@ const columns = [
         //     { text: "Admin", value: "admin" },
         //     { text: "Mangement", value: "Mangement" }
         // ],
-        width: "20%"
+        width: "40%"
     }
 ];
 
@@ -90,16 +92,18 @@ class App extends Component {
         const { data, loading, pagination } = this.state;
 
         return (
-            <Table
-                columns={columns}
-                rowKey={record => {
-                    return record.id;
-                }}
-                dataSource={this.transformData(data)}
-                pagination={pagination}
-                loading={loading}
-                onChange={this.handleTableChange}
-            />
+            <LayoutContent>
+                <Table
+                    columns={columns}
+                    rowKey={record => {
+                        return record.id;
+                    }}
+                    dataSource={this.transformData(data)}
+                    pagination={pagination}
+                    loading={loading}
+                    onChange={this.handleTableChange}
+                />
+            </LayoutContent>
         );
     }
 }
