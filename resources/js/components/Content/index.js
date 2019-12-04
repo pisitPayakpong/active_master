@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import UserContainer from "../User/UserContainer";
+import User from "../User/UserContainer";
+import Dashboard from "../Dashboard";
 
 class ContentRoute extends Component {
     state = {
@@ -20,9 +21,11 @@ class ContentRoute extends Component {
         return (
             <Router>
                 <Route path="/dashboard">
-                    <UserContainer />
+                    <Dashboard />
                 </Route>
-                <Route path="/user">User</Route>
+                <Route path="/user">
+                    <User />
+                </Route>
                 <Route path="/water">Water</Route>
             </Router>
         );
