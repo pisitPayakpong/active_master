@@ -3,20 +3,37 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Transformer\UserTransformer;
+use App\Http\Response\FractalResponse;
 use DB;
 
 class UserController extends Controller
 {
+    const LIMIT_PER_PAGE = 10;
+    const PAGE = 1;
+
+    public function __construct(FractalResponse $fractal)
+    {
+        $this->fractal = $fractal;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = DB::table('users')->get();
+        $params = $request->all();
 
-        return ['data' => $users];
+        $limit = $params['limit'] ?? self::LIMIT_PER_PAGE;
+        $page = $params['page'] ?? self::PAGE;
+        $column = '*';
+
+        $users = User::paginate($limit, $column, null, $page);
+
+        return $this->fractal->collection($users, new UserTransformer());
     }
 
     /**
@@ -48,7 +65,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        return ['data' => $user];
     }
 
     /**

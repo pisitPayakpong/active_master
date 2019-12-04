@@ -1,27 +1,29 @@
 import React, { Component } from "react";
 import { Table } from "antd";
 import axios from "axios";
+import { map } from "lodash";
 
 const columns = [
     {
+        title: "id",
+        dataIndex: "id"
+        // sorter: true
+    },
+    {
         title: "Name",
         dataIndex: "name",
-        sorter: true,
-        render: name => `${name.first} ${name.last}`,
+        // sorter: true,
+        render: name => name,
         width: "20%"
     },
     {
-        title: "Gender",
-        dataIndex: "gender",
-        filters: [
-            { text: "Male", value: "male" },
-            { text: "Female", value: "female" }
-        ],
+        title: "Role",
+        dataIndex: "role",
+        // filters: [
+        //     { text: "Admin", value: "admin" },
+        //     { text: "Mangement", value: "Mangement" }
+        // ],
         width: "20%"
-    },
-    {
-        title: "Email",
-        dataIndex: "email"
     }
 ];
 
@@ -33,7 +35,7 @@ class App extends Component {
     };
 
     componentDidMount() {
-        this.fetch();
+        this.fetchData();
     }
 
     handleTableChange = (pagination, filters, sorter) => {
@@ -42,7 +44,7 @@ class App extends Component {
         this.setState({
             pagination: pager
         });
-        this.fetch({
+        this.fetchData({
             results: pagination.pageSize,
             page: pagination.current,
             sortField: sorter.field,
@@ -51,11 +53,10 @@ class App extends Component {
         });
     };
 
-    fetch = (params = {}) => {
-        console.log("params:", params);
+    fetchData = (params = {}) => {
         this.setState({ loading: true });
         axios({
-            url: "https://randomuser.me/api",
+            url: "http://blog.test/api/test_v1/user",
             method: "get",
             data: {
                 results: 10
@@ -66,22 +67,35 @@ class App extends Component {
             const pagination = { ...this.state.pagination };
             // Read total count from server
             // pagination.total = data.totalCount;
+
+            const { current_page, total } = data?.data?.meta?.pagination;
+
             pagination.total = 200;
             this.setState({
                 loading: false,
-                data: data?.data?.results,
-                pagination
+                data: data?.data,
+                pagination: {
+                    current: current_page,
+                    total: total
+                }
             });
         });
     };
 
+    transformData = data => {
+        return map(data?.data, d => d);
+    };
+
     render() {
         const { data, loading, pagination } = this.state;
+
         return (
             <Table
                 columns={columns}
-                rowKey={record => record.login.uuid}
-                dataSource={data}
+                rowKey={record => {
+                    return record.id;
+                }}
+                dataSource={this.transformData(data)}
                 pagination={pagination}
                 loading={loading}
                 onChange={this.handleTableChange}
