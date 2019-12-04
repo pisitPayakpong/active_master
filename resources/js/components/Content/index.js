@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import { Layout } from "antd";
 
 import UserContainer from "../User/UserContainer";
 
 class ContentRoute extends Component {
     state = {
-        collapsed: false
+        collapsed: false,
+        isLogin: false
     };
 
     toggleCollapsed = () => {
@@ -16,6 +16,7 @@ class ContentRoute extends Component {
     };
 
     render() {
+        const { isLogin } = this.state;
         return (
             <Router>
                 <Route path="/dashboard">

@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { Layout, Breadcrumb } from "antd";
+import Cookies from "js-cookie";
 
 import Header from "../Header";
 import Menu from "../Menu";
 import ContentRoute from "../Content";
-
-const { Content } = Layout;
+import FormLogin from "../FormLogin";
 
 class NavBar extends Component {
     state = {
-        collapsed: false
+        collapsed: false,
+        isLogin: Cookies.get("login")
     };
 
     toggleCollapsed = () => {
@@ -18,11 +19,28 @@ class NavBar extends Component {
         });
     };
 
+    handleLogin = () => {
+        Cookies.set("login", true);
+        this.setState({
+            isLogin: true
+        });
+    };
+
+    handleLogout = () => {
+        Cookies.set("login", false);
+        this.setState({
+            isLogin: false
+        });
+    };
+
     render() {
-        return (
+        const { isLogin } = this.state;
+        return !isLogin ? (
+            <FormLogin handleLogin={this.handleLogin} />
+        ) : (
             <div>
                 <Layout>
-                    <Header />
+                    <Header handleLogout={this.handleLogout} />
                     <Layout>
                         <Menu />
                         <Layout style={{ padding: "0 24px 24px" }}>
