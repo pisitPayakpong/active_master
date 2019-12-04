@@ -17,10 +17,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Route::group('/test', function (Request $request) {
-//     Route::get('/user', 'UserController@get');
-// });
-
 Route::prefix('test_v1')->group(function () {
     Route::prefix('user')->group(function () {
         Route::get('/', 'UserController@index');

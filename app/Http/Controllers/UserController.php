@@ -31,7 +31,14 @@ class UserController extends Controller
         $page = $params['page'] ?? self::PAGE;
         $column = '*';
 
-        $users = User::paginate($limit, $column, null, $page);
+        $users = User::select('*');
+
+        if (isset($params['role'])) {
+            $roles = isset($params['role']) ? explode(",", $params['role']) : [];
+            $users->whereIn('role', $roles);
+        }
+
+        $users = $users->paginate($limit, $column, null, $page);
 
         return $this->fractal->collection($users, new UserTransformer());
     }

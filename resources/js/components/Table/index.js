@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Table } from "antd";
 import axios from "axios";
-import { map } from "lodash";
+import { map, toString } from "lodash";
 
 import LayoutContent from "../Core/LayoutContent";
 
@@ -21,10 +21,11 @@ const columns = [
     {
         title: "Role",
         dataIndex: "role",
-        // filters: [
-        //     { text: "Admin", value: "admin" },
-        //     { text: "Mangement", value: "Mangement" }
-        // ],
+        filters: [
+            { text: "Admin", value: "admin" },
+            { text: "Mangement", value: "mangement" },
+            { text: "Vistor", value: "vistor" }
+        ],
         width: "40%"
     }
 ];
@@ -46,6 +47,7 @@ class App extends Component {
         this.setState({
             pagination: pager
         });
+
         this.fetchData({
             results: pagination.pageSize,
             page: pagination.current,
@@ -63,7 +65,10 @@ class App extends Component {
             data: {
                 results: 10
             },
-            params,
+            params: {
+                ...params,
+                role: toString(params?.role)
+            },
             type: "json"
         }).then(data => {
             const pagination = { ...this.state.pagination };
