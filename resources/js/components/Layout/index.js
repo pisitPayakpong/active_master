@@ -10,7 +10,7 @@ import FormLogin from "../FormLogin";
 class NavBar extends Component {
     state = {
         collapsed: false,
-        isLogin: Cookies.get("login")
+        jwt_token: Cookies.get("JWT_TOKEN")
     };
 
     toggleCollapsed = () => {
@@ -19,28 +19,15 @@ class NavBar extends Component {
         });
     };
 
-    handleLogin = () => {
-        Cookies.set("login", true);
-        this.setState({
-            isLogin: true
-        });
-    };
-
-    handleLogout = () => {
-        Cookies.set("login", false);
-        this.setState({
-            isLogin: false
-        });
-    };
-
     render() {
-        const { isLogin } = this.state;
-        return !isLogin ? (
-            <FormLogin handleLogin={this.handleLogin} />
-        ) : (
+        if (!this.state.jwt_token) {
+            window.location = "/logout";
+        }
+
+        return (
             <div>
                 <Layout>
-                    <Header handleLogout={this.handleLogout} />
+                    <Header />
                     <Layout>
                         <Menu />
                         <Layout style={{ padding: "0 24px 24px" }}>

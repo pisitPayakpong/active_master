@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Button, Layout, Menu } from "antd";
+import axios from "axios";
 
 const { Header } = Layout;
 
@@ -15,7 +16,6 @@ class App extends Component {
     };
 
     render() {
-        const { handleLogout } = this.props;
         return (
             <Header className="header">
                 <div className="logo" />
@@ -32,11 +32,8 @@ class App extends Component {
                             type="primary"
                             htmlType="submit"
                             className="login-form-button"
-                            onClick={() => {
-                                handleLogout(true);
-                            }}
                         >
-                            Logout
+                            <a href="/logout">Logout</a>
                         </Button>
                     </Menu.Item>
                 </Menu>

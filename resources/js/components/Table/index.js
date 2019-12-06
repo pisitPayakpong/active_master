@@ -8,13 +8,13 @@ import LayoutContent from "../Core/LayoutContent";
 const columns = [
     {
         title: "id",
-        dataIndex: "id"
-        // sorter: true
+        dataIndex: "id",
+        sorter: true
     },
     {
         title: "Name",
         dataIndex: "name",
-        // sorter: true,
+        sorter: true,
         render: name => name,
         width: "40%"
     },
@@ -22,8 +22,8 @@ const columns = [
         title: "Role",
         dataIndex: "role",
         filters: [
+            { text: "Super Admin", value: "super_admin" },
             { text: "Admin", value: "admin" },
-            { text: "Mangement", value: "mangement" },
             { text: "Vistor", value: "vistor" }
         ],
         width: "40%"
@@ -67,7 +67,8 @@ class App extends Component {
             },
             params: {
                 ...params,
-                role: toString(params?.role)
+                role: toString(params?.role),
+                sortOrder: params?.sortOrder === "ascend" ? "asc" : "desc"
             },
             type: "json"
         }).then(data => {
