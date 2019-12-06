@@ -27,15 +27,14 @@ class App extends Component {
                 >
                     <Menu.Item key="1">nav 1</Menu.Item>
                     <Menu.Item key="2">nav 2</Menu.Item>
-                    <Menu.Item key="3">
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            className="login-form-button"
-                        >
-                            <a href="/logout">Logout</a>
-                        </Button>
-                    </Menu.Item>
+                    <Menu.Item key="3">nav 3</Menu.Item>
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="login-form-button"
+                    >
+                        <a href="/logout">Logout</a>
+                    </Button>
                 </Menu>
             </Header>
         );

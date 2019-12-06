@@ -68,7 +68,7 @@
                             <select name="role">
                                 <option value="super_admin">Super Admin</option>
                                 <option value="admin">Admin</option>
-                                <option value="vistor">Vistor</option>
+                                <option value="visitor">Visitor</option>
 
                             </select>
                             </div>

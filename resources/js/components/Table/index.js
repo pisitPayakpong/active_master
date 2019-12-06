@@ -4,30 +4,7 @@ import axios from "axios";
 import { map, filter, toString } from "lodash";
 
 import LayoutContent from "../Core/LayoutContent";
-
-const columns = [
-    {
-        title: "id",
-        dataIndex: "id",
-        sorter: true
-    },
-    {
-        title: "Name",
-        dataIndex: "name",
-        sorter: true,
-        render: name => name,
-        width: "40%"
-    },
-    {
-        title: "Role",
-        dataIndex: "role",
-        filters: optionRole,
-        width: "40%",
-        render: value => {
-            return transfromRole(value)?.text;
-        }
-    }
-];
+import Modal from "../Core/Modal";
 
 const optionRole = [
     { text: "Super Admin", value: "super_admin" },
@@ -107,6 +84,37 @@ class App extends Component {
 
     render() {
         const { data, loading, pagination } = this.state;
+
+        const columns = [
+            {
+                title: "id",
+                dataIndex: "id",
+                sorter: true
+            },
+            {
+                title: "Name",
+                dataIndex: "name",
+                sorter: true,
+                render: name => name,
+                width: "40%"
+            },
+            {
+                title: "Role",
+                dataIndex: "role",
+                filters: optionRole,
+                width: "40%",
+                render: value => {
+                    return transfromRole(value)?.text;
+                }
+            },
+            {
+                title: "Detail",
+                width: "10%",
+                render: (value, record) => {
+                    return <Modal />;
+                }
+            }
+        ];
 
         return (
             <LayoutContent>
