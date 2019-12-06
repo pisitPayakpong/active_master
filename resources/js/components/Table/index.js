@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Table } from "antd";
 import axios from "axios";
-import { map, toString } from "lodash";
+import { map, filter, toString } from "lodash";
 
 import LayoutContent from "../Core/LayoutContent";
 
@@ -21,14 +21,25 @@ const columns = [
     {
         title: "Role",
         dataIndex: "role",
-        filters: [
-            { text: "Super Admin", value: "super_admin" },
-            { text: "Admin", value: "admin" },
-            { text: "Vistor", value: "vistor" }
-        ],
-        width: "40%"
+        filters: optionRole,
+        width: "40%",
+        render: value => {
+            return transfromRole(value)?.text;
+        }
     }
 ];
+
+const optionRole = [
+    { text: "Super Admin", value: "super_admin" },
+    { text: "Admin", value: "admin" },
+    { text: "Vistor", value: "visitor" }
+];
+
+const transfromRole = key => {
+    return filter(optionRole, role => {
+        return role?.value === key;
+    })[0];
+};
 
 class App extends Component {
     state = {
