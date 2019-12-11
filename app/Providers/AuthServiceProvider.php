@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Services\Auth\JwtGuard;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Http\Request;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -17,14 +20,12 @@ class AuthServiceProvider extends ServiceProvider
     ];
 
     /**
-     * Register any authentication / authorization services.
+     * Register any application authentication / authorization services.
      *
      * @return void
      */
     public function boot()
     {
         $this->registerPolicies();
-
-        //
     }
 }

@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import { Layout } from "antd";
 
-import TableConfig from "../Table";
-
-const { Content } = Layout;
+import User from "../User/UserContainer";
+import Dashboard from "../Dashboard";
 
 class ContentRoute extends Component {
     state = {
-        collapsed: false
+        collapsed: false,
+        isLogin: false
     };
 
     toggleCollapsed = () => {
@@ -18,22 +17,16 @@ class ContentRoute extends Component {
     };
 
     render() {
+        const { isLogin } = this.state;
         return (
             <Router>
-                <Content
-                    style={{
-                        background: "#fff",
-                        padding: 24,
-                        margin: 0,
-                        minHeight: 280
-                    }}
-                >
-                    <Route path="/user">
-                        Table User
-                        <TableConfig />
-                    </Route>
-                    <Route path="/water">Water</Route>
-                </Content>
+                <Route path="/dashboard">
+                    <Dashboard />
+                </Route>
+                <Route path="/user">
+                    <User />
+                </Route>
+                <Route path="/water">Water</Route>
             </Router>
         );
     }

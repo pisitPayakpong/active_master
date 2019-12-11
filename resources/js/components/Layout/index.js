@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { Layout, Breadcrumb } from "antd";
+import Cookies from "js-cookie";
 
 import Header from "../Header";
 import Menu from "../Menu";
 import ContentRoute from "../Content";
-
-const { Content } = Layout;
+import FormLogin from "../FormLogin";
 
 class NavBar extends Component {
     state = {
-        collapsed: false
+        collapsed: false,
+        jwt_token: Cookies.get("JWT_TOKEN")
     };
 
     toggleCollapsed = () => {
@@ -19,6 +20,10 @@ class NavBar extends Component {
     };
 
     render() {
+        if (!this.state.jwt_token) {
+            window.location = "/logout";
+        }
+
         return (
             <div>
                 <Layout>
