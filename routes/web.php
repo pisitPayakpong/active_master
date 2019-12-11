@@ -11,30 +11,41 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/main', function () {
-    return view('main');
-});
-
-Route::get('/dashboard', function () {
-    return view('main');
-});
-
-Route::get('/user', function () {
-    return view('main');
-});
-
-Route::get('/water', function () {
-    return view('main');
-});
-
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
 
-Auth::routes();
-
-Route::get('/logout', 'Auth\LoginController@logout');
+//Route for normal user
+Route::group(['middleware' => ['auth']], function () {
+    // home
+    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/', function () {
+        return redirect('/login');
+    });
+    Route::get('/main', function () {
+        return view('main');
+    });
+    
+    // dashboard
+    Route::get('/dashboard', function () {
+        return view('main');
+    });
+    
+    // list user
+    Route::get('/user', function () {
+        return view('main');
+    });
+    
+    // list water
+    Route::get('/water', function () {
+        return view('main');
+    });
+    
+    // logout
+    Route::get('/logout', 'Auth\LoginController@logout');
+});
+//Route for admin
+Route::group(['prefix' => 'admin'], function () {
+    Route::group(['middleware' => ['admin']], function () {
+        Route::get('/dashboard', 'admin\AdminController@index');
+    });
+});

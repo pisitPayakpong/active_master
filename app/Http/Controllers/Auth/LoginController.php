@@ -61,7 +61,7 @@ class LoginController extends Controller
             setcookie('JWT_TOKEN', JwtLibrary::jwt($user));
         }
 
-        return redirect()->intended('dashboard');
+        return redirect()->intended('/home');
     }
 
     public function logout(Request $request)
@@ -73,5 +73,14 @@ class LoginController extends Controller
         setcookie('JWT_TOKEN', "");
 
         return redirect('/login');
+    }
+
+    protected function redirectTo()
+    {
+        if (auth()->user()->isAdmin()) {
+            return '/admin/dashboard';
+        } else {
+            return '/home';
+        }
     }
 }

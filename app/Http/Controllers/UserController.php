@@ -28,7 +28,6 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        \Log::info('$request->user : '.print_r($request->user(), true));
         $params = $request->all();
 
         $limit = $params['limit'] ?? self::LIMIT_PER_PAGE;
