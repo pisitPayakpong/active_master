@@ -48,7 +48,7 @@ class App extends Component {
     fetchData = (params = {}) => {
         this.setState({ loading: true });
         axios({
-            url: "http://blog.test/api/test_v1/user",
+            url: "/api/test_v1/user",
             method: "get",
             data: {
                 results: 10

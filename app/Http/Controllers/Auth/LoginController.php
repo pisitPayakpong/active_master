@@ -54,8 +54,12 @@ class LoginController extends Controller
     public function login()
     {
         $user = User::where('email', $this->email)->first();
-
-        setcookie('JWT_TOKEN', JwtLibrary::jwt($user));
+        
+        if (empty($user) || is_null($user)) {
+            redirect('/login');
+        } else {
+            setcookie('JWT_TOKEN', JwtLibrary::jwt($user));
+        }
 
         return redirect()->intended('dashboard');
     }
