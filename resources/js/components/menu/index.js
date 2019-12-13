@@ -1,18 +1,24 @@
 import React, { Component } from "react";
-import { Layout, Menu, Icon } from "antd";
+import { Layout, Menu, Icon, Avatar } from "antd";
 import { map, filter, includes } from "lodash";
+import styled from "styled-components";
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
+
+const DivLogo = styled.div`
+    background-color: "#001529";
+    padding: 20px;
+`;
 
 const MENU_CONFIG = [
     {
         key: "Mangement",
         title: "Mangement",
         subMenu: [
-            { key: "dashboard", title: "Dashboard", path: "/dashboard" },
-            { key: "user", title: "User", path: "/user" },
-            { key: "water", title: "water", path: "/water" }
+            { key: "dashboard", title: "Dashboard", path: "/dashboard" }
+            // { key: "user", title: "User", path: "/user" },
+            // { key: "water", title: "water", path: "/water" }
         ]
     }
 ];
@@ -36,6 +42,11 @@ class NavBar extends Component {
         this.setState({
             openKeys
         });
+    };
+
+    onCollapse = collapsed => {
+        console.log(collapsed);
+        this.setState({ collapsed });
     };
 
     renderMenuItem = subMenu => {
@@ -89,8 +100,20 @@ class NavBar extends Component {
 
         return (
             <div>
-                <Sider width={200} style={{ background: "#fff" }}>
+                <Sider
+                    collapsible
+                    collapsed={this.state.collapsed}
+                    onCollapse={this.onCollapse}
+                    width={200}
+                    style={{ background: "#fff", height: "100%" }}
+                >
+                    <DivLogo
+                        style={{ backgroundColor: "#001529", padding: 20 }}
+                    >
+                        <Avatar shape="square" size={64} icon="user" />
+                    </DivLogo>
                     <Menu
+                        theme="dark"
                         mode="inline"
                         openKeys={openKeys}
                         selectedKeys={[current]}
