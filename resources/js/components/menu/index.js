@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Layout, Menu, Icon } from "antd";
-import { map } from "lodash";
+import { map, filter, includes } from "lodash";
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
@@ -66,8 +66,27 @@ class NavBar extends Component {
         });
     };
 
+    authMenu = configs => {
+        const authMenus = JSON.parse(
+            document.getElementById("initial-state").innerHTML
+        );
+
+        return map(configs, config => {
+            const subMenu = filter(config.subMenu, menu => {
+                return includes(authMenus?.render_menu, menu.key);
+            });
+
+            return {
+                ...config,
+                subMenu
+            };
+        });
+    };
+
     render() {
         const { current, openKeys } = this.state;
+        const menuConfig = this.authMenu(MENU_CONFIG);
+
         return (
             <div>
                 <Sider width={200} style={{ background: "#fff" }}>
@@ -78,7 +97,7 @@ class NavBar extends Component {
                         onOpenChange={this.onOpenChange}
                         style={{ height: "100%", borderRight: 0 }}
                     >
-                        {this.renderSubMenu(MENU_CONFIG)}
+                        {this.renderSubMenu(menuConfig)}
                     </Menu>
                 </Sider>
             </div>

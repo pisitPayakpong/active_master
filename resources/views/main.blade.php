@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
@@ -66,13 +67,14 @@
             }
         </style>
     </head>
-
-            <div class="content">
-                <div id="app-container" ></div>
-            </div>
-        <script src="{{ mix('js/manifest.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
-        <script src="{{ mix('js/vendor.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
-        <script src="{{ mix('js/app.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
+    <div class="content">
+        <div id="app-container" ></div>
+    </div>
+    
+    <script id="initial-state" type="application/json">{!! $viewState !!}</script>
+    <script src="{{ mix('js/manifest.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
+    <script src="{{ mix('js/vendor.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
+    <script src="{{ mix('js/app.js') . '?v=' . env('ASSETS_VERSION', '1') }}"></script>
 </html>
 
 

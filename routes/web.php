@@ -21,24 +21,35 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
         return redirect('/login');
     });
-    Route::get('/main', function () {
-        return view('main');
-    });
+    // Route::get('/main', function () {
+    //     return view('main');
+    // });
     
+    // // dashboard
+    // Route::get('/dashboard', function () {
+    //     return view('main');
+    // });
+    
+    // // list user
+    // Route::get('/user', function () {
+    //     return view('main');
+    // });
+    
+    // // list water
+    // Route::get('/water', function () {
+    //     return view('main');
+    // });
+    
+    Route::get('/main', 'LayoutController@index');
+
     // dashboard
-    Route::get('/dashboard', function () {
-        return view('main');
-    });
+    Route::get('/dashboard', 'LayoutController@index');
     
     // list user
-    Route::get('/user', function () {
-        return view('main');
-    });
+    Route::get('/user', 'LayoutController@index');
     
     // list water
-    Route::get('/water', function () {
-        return view('main');
-    });
+    Route::get('/water', 'LayoutController@index');
     
     // logout
     Route::get('/logout', 'Auth\LoginController@logout');

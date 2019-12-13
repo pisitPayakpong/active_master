@@ -24,3 +24,9 @@ Route::prefix('test_v1')->group(function () {
         Route::get('/{id}', 'UserController@show');
     });
 });
+
+Route::prefix('internal')->group(function () {
+    Route::prefix('migrate_member')->group(function () {
+        Route::get('/', 'MigrateMemberController@index');
+    });
+});
