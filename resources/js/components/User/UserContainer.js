@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button } from "antd";
 
-import TableConfig from "../Table";
+import TableConfig from "../UserTable";
 import FormUser from "../FormUser";
 
 class UserContainer extends Component {

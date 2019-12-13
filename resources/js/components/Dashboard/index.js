@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import TableConfig from "../Table";
+import GlassTable from "../GlassTable";
+import MachineTable from "../MachineTable";
 import CardComponent from "../Card";
 
 class DashboardContainer extends Component {
@@ -17,7 +18,8 @@ class DashboardContainer extends Component {
         return (
             <>
                 <CardComponent />
-                <TableConfig />
+                <MachineTable />
+                <GlassTable />
             </>
         );
     }

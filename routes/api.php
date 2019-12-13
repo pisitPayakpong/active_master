@@ -23,4 +23,21 @@ Route::prefix('test_v1')->group(function () {
         Route::post('/login', 'UserController@login');
         Route::get('/{id}', 'UserController@show');
     });
+
+    // glass
+    Route::prefix('glass')->group(function () {
+        Route::get('/', 'GlassController@index');
+        Route::get('/total_usage', 'GlassController@calculateTotalUsage');
+    });
+
+    // machine
+    Route::prefix('machine')->group(function () {
+        Route::get('/', 'MachineController@index');
+    });
+});
+
+Route::prefix('internal')->group(function () {
+    Route::prefix('migrate_member')->group(function () {
+        Route::get('/', 'MigrateMemberController@index');
+    });
 });

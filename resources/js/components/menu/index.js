@@ -1,18 +1,24 @@
 import React, { Component } from "react";
-import { Layout, Menu, Icon } from "antd";
-import { map } from "lodash";
+import { Layout, Menu, Icon, Avatar } from "antd";
+import { map, filter, includes } from "lodash";
+import styled from "styled-components";
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
+
+const DivLogo = styled.div`
+    background-color: "#001529";
+    padding: 20px;
+`;
 
 const MENU_CONFIG = [
     {
         key: "Mangement",
         title: "Mangement",
         subMenu: [
-            { key: "dashboard", title: "Dashboard", path: "/dashboard" },
-            { key: "user", title: "User", path: "/user" },
-            { key: "water", title: "water", path: "/water" }
+            { key: "dashboard", title: "Dashboard", path: "/dashboard" }
+            // { key: "user", title: "User", path: "/user" },
+            // { key: "water", title: "water", path: "/water" }
         ]
     }
 ];
@@ -36,6 +42,11 @@ class NavBar extends Component {
         this.setState({
             openKeys
         });
+    };
+
+    onCollapse = collapsed => {
+        console.log(collapsed);
+        this.setState({ collapsed });
     };
 
     renderMenuItem = subMenu => {
@@ -66,19 +77,50 @@ class NavBar extends Component {
         });
     };
 
+    authMenu = configs => {
+        const authMenus = JSON.parse(
+            document.getElementById("initial-state").innerHTML
+        );
+
+        return map(configs, config => {
+            const subMenu = filter(config.subMenu, menu => {
+                return includes(authMenus?.render_menu, menu.key);
+            });
+
+            return {
+                ...config,
+                subMenu
+            };
+        });
+    };
+
     render() {
         const { current, openKeys } = this.state;
+        const menuConfig = this.authMenu(MENU_CONFIG);
+
         return (
             <div>
-                <Sider width={200} style={{ background: "#fff" }}>
+                <Sider
+                    collapsible
+                    collapsed={this.state.collapsed}
+                    onCollapse={this.onCollapse}
+                    width={200}
+                    style={{ background: "#fff", height: "100%" }}
+                >
+                    <DivLogo
+                        style={{ backgroundColor: "#001529", padding: 20 }}
+                    >
+                        <Avatar shape="square" size={64} icon="user" />
+                    </DivLogo>
                     <Menu
+                        theme="dark"
                         mode="inline"
                         openKeys={openKeys}
                         selectedKeys={[current]}
                         onOpenChange={this.onOpenChange}
                         style={{ height: "100%", borderRight: 0 }}
                     >
-                        {this.renderSubMenu(MENU_CONFIG)}
+                        {this.renderSubMenu(menuConfig)}
                     </Menu>
                 </Sider>
             </div>
