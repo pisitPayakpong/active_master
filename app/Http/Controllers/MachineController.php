@@ -8,6 +8,7 @@ use App\Http\Response\FractalResponse;
 use App\Library\QueryHelper;
 use App\Models\Machine;
 use App\Transformer\MachineTransformer;
+use App\Transformer\OptionTransformer;
 
 use DB;
 
@@ -42,6 +43,11 @@ class MachineController extends Controller
         $column = '*';
         
         $machine = Machine::select('*');
+
+        if (isset($params['type'])) {
+            $types = isset($params['type']) ? explode(",", $params['type']) : [];
+            $machine->whereIn('type', $types);
+        }
 
         if (isset($params['sort'])) {
             $query = QueryHelper::getSort($params['sort'], self::MAPPED_COLUMN_WITH_PARAM);
@@ -124,5 +130,14 @@ class MachineController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getOptions(Request $request)
+    {
+        $types = Machine::select('type as text', 'type as value')
+                        ->groupBy('type')
+                        ->get();
+
+        return $this->fractal->collection($types, new OptionTransformer());
     }
 }
