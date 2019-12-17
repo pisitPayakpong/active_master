@@ -72,7 +72,7 @@ class App extends Component {
                 pagination: {
                     current: current_page,
                     total: total,
-                    showSizeChanger: true   
+                    showSizeChanger: true
                 }
             });
         });
@@ -167,6 +167,7 @@ class App extends Component {
                     pagination={pagination}
                     loading={loading}
                     onChange={this.handleTableChange}
+                    scroll={{ x: 1500, y: 300 }}
                 />
             </LayoutContent>
         );
