@@ -33,6 +33,7 @@ Route::prefix('test_v1')->group(function () {
     // machine
     Route::prefix('machine')->group(function () {
         Route::get('/', 'MachineController@index');
+        Route::get('/as_options', 'MachineController@getOptions');
     });
 });
 

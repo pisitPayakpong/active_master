@@ -17,9 +17,12 @@ class MachineTransformer extends TransformerAbstract
         return [
           'tag' => $tag,
           'sn'  => $machine->sn,
+          'type' => $machine->type,
           'status' => $machine->status,
           'machineId'  => $machine->machineID,
           'dateTime' => $this->transformDateToDateTime($machine->stamp),
+          'lat' => $machine->lat,
+          'lng' => $machine->lng,
         ];
     }
 }

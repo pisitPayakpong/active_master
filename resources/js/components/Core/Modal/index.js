@@ -23,7 +23,11 @@ class App extends Component {
     };
 
     render() {
-        const { title = "Basic Modal", renderContents } = this.props;
+        const {
+            title = "Basic Modal",
+            renderContents,
+            width = "500px"
+        } = this.props;
 
         const contents = renderContents ? renderContents() : "contents";
 
@@ -37,6 +41,7 @@ class App extends Component {
                     visible={this.state.visible}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
+                    width={width}
                 >
                     {contents}
                 </Modal>

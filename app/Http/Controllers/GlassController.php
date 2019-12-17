@@ -44,7 +44,8 @@ class GlassController extends Controller
         $limit = $params['limit'] ?? self::LIMIT_PER_PAGE;
         $page = $params['page'] ?? self::PAGE;
         $column = '*';
-
+        
+        // warring heavy query
         $queryCreateTime = DB::raw(
             "IF(machine.type = 'NAMM', glass.create_time, glass.start_datetime) as create_time"
         );

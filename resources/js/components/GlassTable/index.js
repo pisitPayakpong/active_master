@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Table, Avatar } from "antd";
 import axios from "axios";
-import { map, filter, toString } from "lodash";
+import { map, toString } from "lodash";
 import styled from "styled-components";
 
 import LayoutContent from "../Core/LayoutContent";
@@ -72,24 +72,15 @@ class App extends Component {
                 pagination: {
                     current: current_page,
                     total: total,
-                    showSizeChanger: true
+                    showSizeChanger: true   
                 }
             });
         });
     };
 
-    imageExists = imageUrl => {
-        var http = new XMLHttpRequest();
-
-        http.open("HEAD", imageUrl, false);
-        http.send();
-
-        return http.status != 404;
-    };
-
-    addDefaultSrc(ev) {
-        ev.target.src = "http://43.229.149.50/h2o/images/customer.png";
-    }
+    // addDefaultSrc(ev) {
+    //     // ev.target.src = "http://43.229.149.50/h2o/images/customer.png";
+    // }
 
     renderImage = src => {
         let url;
@@ -105,7 +96,7 @@ class App extends Component {
                 shape="square"
                 size={64}
                 src={url}
-                onError={this.addDefaultSrc}
+                // onError={this.addDefaultSrc}
             />
         );
     };

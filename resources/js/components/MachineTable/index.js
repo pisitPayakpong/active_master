@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 import LayoutContent from "../Core/LayoutContent";
 import Modal from "../Core/Modal";
+import SimpleMap from "../Map/SimpleMap";
 
 const DivTitle = styled.div`
     font-size: 22px;
@@ -17,7 +18,8 @@ class App extends Component {
     state = {
         data: [],
         pagination: {},
-        loading: false
+        loading: false,
+        options: {}
     };
 
     componentDidMount() {
@@ -31,17 +33,34 @@ class App extends Component {
             pagination: pager
         });
 
+        const typeFilter = toString(filters?.type);
+
         this.fetchData({
             results: pagination.pageSize,
             page: pagination.current,
             sort: `${this.getSymbolOrder(sorter.order)}${sorter.field}`,
-            // sortOrder: sorter.order,
-            ...filters
+            type: typeFilter
         });
     };
 
     getSymbolOrder = sortOrder => {
         return sortOrder === "ascend" ? "-" : "";
+    };
+
+    fetchOption = () => {
+        axios({
+            url: "/api/test_v1/machine/as_options",
+            method: "get",
+            data: {
+                results: 10
+            },
+            type: "json"
+        }).then(data => {
+            this.setState({
+                loading: false,
+                options: data?.data
+            });
+        });
     };
 
     fetchData = (params = {}) => {
@@ -76,6 +95,7 @@ class App extends Component {
                 }
             });
         });
+        this.fetchOption();
     };
 
     renderImage = src => {
@@ -123,7 +143,7 @@ class App extends Component {
     };
 
     render() {
-        const { data, loading, pagination } = this.state;
+        const { data, loading, pagination, options } = this.state;
 
         const columns = [
             {
@@ -135,6 +155,11 @@ class App extends Component {
                 title: "Serial Number",
                 dataIndex: "sn",
                 sorter: true
+            },
+            {
+                title: "Type",
+                dataIndex: "type",
+                filters: options?.data
             },
             {
                 title: "Machine ID",
@@ -154,7 +179,14 @@ class App extends Component {
             },
             {
                 title: "Map",
-                render: () => <Modal />
+                render: row => {
+                    return (
+                        <Modal
+                            width="850px"
+                            renderContents={() => <SimpleMap data={row} />}
+                        />
+                    );
+                }
             }
         ];
 
