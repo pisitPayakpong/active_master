@@ -6,10 +6,10 @@ import axios from "axios";
 import LayoutContent from "../Core/LayoutContent";
 
 const CONFIG_CARD = [
-    { span: 6, key: "glass", title: "Total Glass", value: null },
-    { span: 6, key: "o3", title: "Total O3 Usage", value: null },
-    { span: 6, key: "h2", title: "Total H2 Usage", value: null },
-    { span: 6, key: "price", title: "Total Revenue", value: null }
+    { sm: 12, md: 6, key: "glass", title: "Total Glass", value: null },
+    { sm: 12, md: 6, key: "o3", title: "Total O3 Usage", value: null },
+    { sm: 12, md: 6, key: "h2", title: "Total H2 Usage", value: null },
+    { sm: 12, md: 6, key: "price", title: "Total Revenue", value: null }
 ];
 
 class CardComponent extends PureComponent {
@@ -57,7 +57,7 @@ class CardComponent extends PureComponent {
             <LayoutContent minHeight="auto">
                 <Row gutter={16}>
                     {map(newConfigs, (card, key) => (
-                        <Col span={card?.span} key={key}>
+                        <Col {...card} key={key}>
                             <Card
                                 title={card?.title}
                                 bordered={true}
