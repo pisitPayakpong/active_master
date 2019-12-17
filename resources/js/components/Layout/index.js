@@ -3,9 +3,9 @@ import { Layout, Breadcrumb } from "antd";
 import Cookies from "js-cookie";
 
 import Header from "../Header";
-import Menu from "../Menu";
+import Menu from "../Menu/index";
 import ContentRoute from "../Content";
-import FormLogin from "../FormLogin";
+// import FormLogin from "../FormLogin";
 
 const { Content } = Layout;
 
