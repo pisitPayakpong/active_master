@@ -1,7 +1,10 @@
 import React, { Component } from "react";
-import { Form, Input, Tooltip, Icon, Button } from "antd";
+import { Form, Input, Tooltip, Icon, Button, Select } from "antd";
+import axios from "axios";
+import { map } from "lodash";
 
 import Layout from "../Core/LayoutContent";
+import { openNotification, getOptionRole } from "../Core/utils";
 
 class RegistrationForm extends Component {
     state = {
@@ -10,13 +13,60 @@ class RegistrationForm extends Component {
     };
 
     handleSubmit = e => {
+        const { mode } = this.props;
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-            console.log({ values });
             if (!err) {
-                console.log("Received values of form: ", values);
+                if (mode === "create") {
+                    this.handleCreareUser(values);
+                }
+
+                if (mode === "edit") {
+                    this.handleUpdateUser(values);
+                }
+                // console.log("Received values of form: ", values);
             }
         });
+    };
+
+    handleCreareUser = value => {
+        const { handleSetStep } = this.props;
+        // post
+        axios({
+            url: `/api/test_v1/user`,
+            method: "post",
+            data: {
+                ...value
+            },
+            type: "json"
+        })
+            .then(data => {
+                openNotification();
+                handleSetStep("list");
+            })
+            .catch(e => {
+                openNotification(false, e?.response?.statusText);
+            });
+    };
+
+    handleUpdateUser = value => {
+        const { handleSetStep, data } = this.props;
+        // put
+        axios({
+            url: `/api/test_v1/user/${data?.id}`,
+            method: "put",
+            data: {
+                ...value
+            },
+            type: "json"
+        })
+            .then(data => {
+                openNotification();
+                handleSetStep("list");
+            })
+            .catch(e => {
+                openNotification(false, e?.response?.statusText);
+            });
     };
 
     handleConfirmBlur = e => {
@@ -41,9 +91,47 @@ class RegistrationForm extends Component {
         callback();
     };
 
+    handleSelectChange = value => {
+        this.props.form.setFieldsValue({
+            note: `Hi, ${value === "male" ? "man" : "lady"}!`
+        });
+    };
+
+    renderOption = () => {
+        return map(getOptionRole(), (role, key) => {
+            return (
+                <Option value={role?.value} key={key}>
+                    {role?.text}
+                </Option>
+            );
+        });
+    };
+
+    renderSelectRole = () => {
+        const { getFieldDecorator } = this.props.form;
+        const { data } = this.props;
+        return (
+            <Form.Item label="Gender">
+                {getFieldDecorator("role", {
+                    initialValue: data?.role,
+                    rules: [
+                        {
+                            required: true,
+                            message: "Please select your Role!"
+                        }
+                    ]
+                })(
+                    <Select placeholder="Select a option and change input text above">
+                        {this.renderOption()}
+                    </Select>
+                )}
+            </Form.Item>
+        );
+    };
+
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { handleSetStep } = this.props;
+        const { handleSetStep, mode, data } = this.props;
 
         const formItemLayout = {
             labelCol: {
@@ -68,6 +156,7 @@ class RegistrationForm extends Component {
 
         return (
             <Layout style={{ padding: "100px 500px" }}>
+                {mode === "create" ? "Register" : "Edit"}
                 <Form {...formItemLayout} onSubmit={this.handleSubmit}>
                     <Form.Item
                         label={
@@ -80,6 +169,7 @@ class RegistrationForm extends Component {
                         }
                     >
                         {getFieldDecorator("name", {
+                            initialValue: data?.name,
                             rules: [
                                 {
                                     required: true,
@@ -91,6 +181,7 @@ class RegistrationForm extends Component {
                     </Form.Item>
                     <Form.Item label="E-mail">
                         {getFieldDecorator("email", {
+                            initialValue: data?.email,
                             rules: [
                                 {
                                     type: "email",
@@ -129,9 +220,10 @@ class RegistrationForm extends Component {
                             ]
                         })(<Input.Password onBlur={this.handleConfirmBlur} />)}
                     </Form.Item>
+                    {this.renderSelectRole()}
                     <Form.Item {...tailFormItemLayout}>
                         <Button type="primary" htmlType="submit">
-                            Register
+                            Submit
                         </Button>
                         <Button
                             onClick={() => {

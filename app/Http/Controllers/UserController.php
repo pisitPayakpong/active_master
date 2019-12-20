@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Response\FractalResponse;
 use App\Models\User;
 use App\Transformer\UserTransformer;
 use App\Library\JwtLibrary;
-use DB;
+use Illuminate\Validation\Rule;
 use Validator;
+use DB;
 
 class UserController extends Controller
 {
@@ -68,7 +70,31 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $params = $request->all();
+        $errors = Validator::make($params, [
+            'email' => ['email','required' , Rule::unique('users')->where(function ($query) use ($params) {
+                return $query->where('email', $params['email']);
+            })
+        ],
+            'password' => 'required',
+            'name' => 'required',
+        ], [
+            'email.required' => 'Email is required.',
+            'email.email' => 'Invalid email address.',
+            'email.unique' => 'This email is already in use.',
+            'password.required' => 'Password is required.',
+            'name.required' => 'Name is required.',
+            'role_type.required' => 'Role Type is required.',
+        ])->errors();
+
+        if ($errors->isNotEmpty()) {
+            return $this->responseRequestError($errors->first(), 422);
+        }
+
+        $params['password'] = Hash::make($params['password']);
+        $user = User::create($params);
+
+        return $this->fractal->item($user, new UserTransformer());
     }
 
     /**
@@ -104,7 +130,33 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $params = $request->all();
+        $errors = Validator::make($params, [
+            'email' => 'required',
+            'password' => 'required',
+            'name' => 'required',
+            'role' => 'required'
+        ], [
+            'email.required' => 'Email is required.',
+            'email.email' => 'Invalid email address.',
+            'password.required' => 'Password is required.',
+            'name.required' => 'Name is required.',
+            'role.required' => 'Role is required.',
+        ])->errors();
+
+        if ($errors->isNotEmpty()) {
+            return $this->responseRequestError($errors->first(), 422);
+        }
+
+        $user = User::findOrFail($id);
+
+        $user->name = $params['name'];
+        $user->email = $params['email'];
+        $user->password = Hash::make($params['password']);
+        $user->role = $params['role'];
+        $user->save();
+
+        return $this->fractal->item($user, new UserTransformer());
     }
 
     /**
@@ -115,7 +167,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::destroy($id);
+
+        return $this->responseRequestSuccess('Delete Sucesss');
     }
 
     public function login(Request $request)

@@ -21,8 +21,11 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('test_v1')->group(function () {
         Route::prefix('user')->group(function () {
             Route::get('/', 'UserController@index');
+            Route::post('/', 'UserController@store');
             Route::post('/login', 'UserController@login');
             Route::get('/{id}', 'UserController@show');
+            Route::put('/{id}', 'UserController@update');
+            Route::delete('/{id}', 'UserController@destroy');
         });
     
         // glass
