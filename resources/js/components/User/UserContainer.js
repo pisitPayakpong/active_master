@@ -1,14 +1,20 @@
 import React, { Component } from "react";
 import { Button } from "antd";
+import axios from "axios";
 
 import TableConfig from "../UserTable";
 import FormUser from "../FormUser";
 import Layout from "../Core/LayoutContent";
 
+import { openNotification } from "../Core/utils";
+
 class UserContainer extends Component {
     state = {
         collapsed: false,
-        step: "list" // list, form
+        step: "list", // list, form,
+        dataSource: {
+            user: ""
+        }
     };
 
     toggleCollapsed = () => {
@@ -23,8 +29,46 @@ class UserContainer extends Component {
         });
     };
 
+    handleFetchUser = userId => {
+        this.setState({ loading: true });
+        axios({
+            url: `/api/test_v1/user/${userId}`,
+            method: "get",
+            data: {
+                results: 10
+            },
+            type: "json"
+        }).then(data => {
+            this.setState({
+                loading: false,
+                dataSource: { user: data?.data }
+            });
+        });
+    };
+
+    handleDeleteUser = userId => {
+        this.setState({ loading: true });
+        axios({
+            url: `/api/test_v1/user/${userId}`,
+            method: "delete",
+            type: "json"
+        })
+            .then(data => {
+                openNotification();
+                this.setState({
+                    loading: false
+                });
+            })
+            .catch(e => {
+                openNotification(false, e?.response?.statusText);
+            });
+    };
+
     render() {
-        const { step } = this.state;
+        const {
+            step,
+            dataSource: { user }
+        } = this.state;
         return (
             <>
                 {step === "list" && (
@@ -36,16 +80,30 @@ class UserContainer extends Component {
                         >
                             <Button
                                 type="primary"
-                                onClick={() => this.handleSetStep("form")}
+                                onClick={() => this.handleSetStep("formCreate")}
                             >
                                 Create User
                             </Button>
                         </Layout>
-                        <TableConfig />
+                        <TableConfig
+                            handleSetStep={this.handleSetStep}
+                            handleFetchUser={this.handleFetchUser}
+                            handleDeleteUser={this.handleDeleteUser}
+                        />
                     </>
                 )}
-                {step === "form" && (
-                    <FormUser handleSetStep={this.handleSetStep} />
+                {step === "formCreate" && (
+                    <FormUser
+                        handleSetStep={this.handleSetStep}
+                        mode="create"
+                    />
+                )}
+                {step === "formEdit" && (
+                    <FormUser
+                        handleSetStep={this.handleSetStep}
+                        mode="edit"
+                        data={user?.data}
+                    />
                 )}
             </>
         );

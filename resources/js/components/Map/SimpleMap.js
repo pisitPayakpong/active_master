@@ -29,6 +29,10 @@ class SimpleMap extends Component {
             lng: parseFloat(data?.lng)
         };
 
+        if (!data?.lat || !data?.lng) {
+            return <div>Not Found lat lng</div>;
+        }
+
         return (
             // Important! Always set the container height explicitly
             <div style={{ height: "100vh", width: "100%" }}>

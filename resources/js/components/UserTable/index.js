@@ -1,19 +1,13 @@
 import React, { Component } from "react";
-import { Table } from "antd";
+import { Table, Button } from "antd";
 import axios from "axios";
 import { map, filter, toString } from "lodash";
 
 import LayoutContent from "../Core/LayoutContent";
-import Modal from "../Core/Modal";
-
-const optionRole = [
-    { text: "Super Admin", value: "super_admin" },
-    { text: "Admin", value: "admin" },
-    { text: "Vistor", value: "visitor" }
-];
+import { getOptionRole } from "../Core/utils";
 
 const transfromRole = key => {
-    return filter(optionRole, role => {
+    return filter(getOptionRole(), role => {
         return role?.value === key;
     })[0];
 };
@@ -61,8 +55,6 @@ class App extends Component {
             type: "json"
         }).then(data => {
             const pagination = { ...this.state.pagination };
-            // Read total count from server
-            // pagination.total = data.totalCount;
 
             const { current_page, total } = data?.data?.meta?.pagination;
 
@@ -84,6 +76,7 @@ class App extends Component {
 
     render() {
         const { data, loading, pagination } = this.state;
+        const { handleSetStep, handleFetchUser, handleDeleteUser } = this.props;
 
         const columns = [
             {
@@ -96,22 +89,53 @@ class App extends Component {
                 dataIndex: "name",
                 sorter: true,
                 render: name => name,
-                width: "40%"
+                width: "20%"
+            },
+            {
+                title: "Email Or Username",
+                dataIndex: "email",
+                sorter: true,
+                render: name => name,
+                width: "20%"
             },
             {
                 title: "Role",
                 dataIndex: "role",
-                filters: optionRole,
-                width: "40%",
+                filters: getOptionRole(),
+                width: "20%",
                 render: value => {
                     return transfromRole(value)?.text;
                 }
             },
             {
-                title: "Detail",
-                width: "10%",
+                title: "Action",
+                width: "20%",
                 render: (value, record) => {
-                    return <Modal />;
+                    return (
+                        <>
+                            <Button
+                                onClick={() => {
+                                    handleSetStep("formEdit");
+                                    handleFetchUser(record?.id);
+                                }}
+                                style={{ marginRight: 5 }}
+                            >
+                                Edit
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    handleDeleteUser(record?.id);
+                                    this.fetchData();
+                                }}
+                                style={{
+                                    backgroundColor: "#ff4d4f",
+                                    color: "white"
+                                }}
+                            >
+                                Delete
+                            </Button>
+                        </>
+                    );
                 }
             }
         ];
