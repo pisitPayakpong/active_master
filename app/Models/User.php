@@ -43,4 +43,9 @@ class User extends Authenticatable
     {
         return $this->role === self::ROLE_ADMIN;
     }
+
+    public function shops()
+    {
+        return $this->belongsToMany('App\Models\Shop', 'user_shop');
+    }
 }

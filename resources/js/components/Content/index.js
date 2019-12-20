@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import User from "../User/UserContainer";
 import Dashboard from "../Dashboard";
+import ShopTable from "../ShopTable";
+import MachineTable from "../MachineTable";
+import GlassTable from "../GlassTable";
 
 class ContentRoute extends Component {
     state = {
@@ -26,7 +29,16 @@ class ContentRoute extends Component {
                 <Route path="/user">
                     <User />
                 </Route>
-                <Route path="/water">Water</Route>
+                <Route path="/shop">
+                    <ShopTable />
+                </Route>
+                <Route path="/machine">
+                    <MachineTable />
+                </Route>
+                <Route path="/glass">
+                    <GlassTable />
+                </Route>
+                {/* <Route path="/water">Water</Route> */}
             </Router>
         );
     }

@@ -3,6 +3,7 @@ import { Button } from "antd";
 
 import TableConfig from "../UserTable";
 import FormUser from "../FormUser";
+import Layout from "../Core/LayoutContent";
 
 class UserContainer extends Component {
     state = {
@@ -28,13 +29,18 @@ class UserContainer extends Component {
             <>
                 {step === "list" && (
                     <>
-                        <Button
-                            type="primary"
-                            style={{ marginBottom: 16 }}
-                            onClick={() => this.handleSetStep("form")}
+                        <Layout
+                            minHeight="50px"
+                            padding="15px 50px"
+                            textAlign="right"
                         >
-                            Create User
-                        </Button>
+                            <Button
+                                type="primary"
+                                onClick={() => this.handleSetStep("form")}
+                            >
+                                Create User
+                            </Button>
+                        </Layout>
                         <TableConfig />
                     </>
                 )}

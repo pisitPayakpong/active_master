@@ -5,15 +5,16 @@ const { Content } = Layout;
 
 class App extends Component {
     render() {
-        const { minHeight = 280 } = this.props;
+        const { minHeight = 280, padding = 24, textAlign = "" } = this.props;
         return (
             <Content
                 style={{
                     background: "#fff",
-                    padding: 24,
+                    padding,
                     margin: 0,
                     minHeight,
-                    marginBottom: "20px"
+                    marginBottom: "20px",
+                    textAlign
                 }}
             >
                 {this.props.children}

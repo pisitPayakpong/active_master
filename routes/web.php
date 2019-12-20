@@ -16,29 +16,12 @@ Auth::routes();
 
 //Route for normal user
 Route::group(['middleware' => ['auth']], function () {
+
     // home
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/', function () {
-        return redirect('/login');
+        return redirect('/home');
     });
-    // Route::get('/main', function () {
-    //     return view('main');
-    // });
-    
-    // // dashboard
-    // Route::get('/dashboard', function () {
-    //     return view('main');
-    // });
-    
-    // // list user
-    // Route::get('/user', function () {
-    //     return view('main');
-    // });
-    
-    // // list water
-    // Route::get('/water', function () {
-    //     return view('main');
-    // });
     
     Route::get('/main', 'LayoutController@index');
 
@@ -53,7 +36,17 @@ Route::group(['middleware' => ['auth']], function () {
     
     // logout
     Route::get('/logout', 'Auth\LoginController@logout');
+
+    // shop
+    Route::get('/shop', 'LayoutController@index');
+
+    // machine
+    Route::get('/machine', 'LayoutController@index');
+
+    // glass
+    Route::get('/glass', 'LayoutController@index');
 });
+
 //Route for admin
 Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => ['admin']], function () {
