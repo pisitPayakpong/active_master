@@ -25,7 +25,6 @@ const MENU_CONFIG = [
 
 class NavBar extends Component {
     state = {
-        collapsed: false,
         current: "",
         openKeys: []
     };
@@ -44,10 +43,10 @@ class NavBar extends Component {
         });
     };
 
-    onCollapse = collapsed => {
-        console.log(collapsed);
-        this.setState({ collapsed });
-    };
+    // onCollapse = collapsed => {
+    //     console.log(collapsed);
+    //     this.setState({ collapsed });
+    // };
 
     renderMenuItem = subMenu => {
         return map(subMenu, (menu, key) => {
@@ -95,17 +94,21 @@ class NavBar extends Component {
     };
 
     render() {
+        const { collapsed, toggleCollapsed } = this.props;
         const { current, openKeys } = this.state;
         const menuConfig = this.authMenu(MENU_CONFIG);
 
         return (
             <div>
                 <Sider
-                    collapsible
-                    collapsed={this.state.collapsed}
-                    onCollapse={this.onCollapse}
+                    // collapsible
+                    collapsed={collapsed}
+                    onCollapse={toggleCollapsed}
                     width={200}
                     style={{ background: "#fff", height: "100%" }}
+                    breakpoint="md"
+                    collapsedWidth="0"
+                    zeroWidthTriggerStyle={{ display: "none" }}
                 >
                     <DivLogo
                         style={{ backgroundColor: "#001529", padding: 20 }}
