@@ -24,7 +24,7 @@ class LayoutController extends Controller
     public function index()
     {
         $renderMenu = [
-            'dashboard', 'water',
+            'dashboard', 'water', 'shop', 'machine', 'glass'
         ];
 
         if (auth()->user()->isAdmin()) {

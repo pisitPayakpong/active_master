@@ -17,23 +17,31 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('test_v1')->group(function () {
-    Route::prefix('user')->group(function () {
-        Route::get('/', 'UserController@index');
-        Route::post('/login', 'UserController@login');
-        Route::get('/{id}', 'UserController@show');
-    });
-
-    // glass
-    Route::prefix('glass')->group(function () {
-        Route::get('/', 'GlassController@index');
-        Route::get('/total_usage', 'GlassController@calculateTotalUsage');
-    });
-
-    // machine
-    Route::prefix('machine')->group(function () {
-        Route::get('/', 'MachineController@index');
-        Route::get('/as_options', 'MachineController@getOptions');
+Route::middleware('auth:api')->group(function () {
+    Route::prefix('test_v1')->group(function () {
+        Route::prefix('user')->group(function () {
+            Route::get('/', 'UserController@index');
+            Route::post('/login', 'UserController@login');
+            Route::get('/{id}', 'UserController@show');
+        });
+    
+        // glass
+        Route::prefix('glass')->group(function () {
+            Route::get('/', 'GlassController@index');
+            Route::get('/total_usage', 'GlassController@calculateTotalUsage');
+        });
+    
+        // machine
+        Route::prefix('machine')->group(function () {
+            Route::get('/', 'MachineController@index');
+            Route::get('/as_options', 'MachineController@getOptions');
+        });
+    
+        // Shop
+        Route::prefix('shop')->group(function () {
+            // dd('shop');
+            Route::get('/', 'ShopController@index');
+        });
     });
 });
 
