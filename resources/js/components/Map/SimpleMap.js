@@ -25,8 +25,8 @@ class SimpleMap extends Component {
     render() {
         const { data } = this.props;
         const center = {
-            lat: data?.lat,
-            lng: data?.lng
+            lat: parseFloat(data?.lat),
+            lng: parseFloat(data?.lng)
         };
 
         return (

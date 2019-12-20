@@ -36,6 +36,15 @@ Route::group(['middleware' => ['auth']], function () {
     
     // logout
     Route::get('/logout', 'Auth\LoginController@logout');
+
+    // shop
+    Route::get('/shop', 'LayoutController@index');
+
+    // machine
+    Route::get('/machine', 'LayoutController@index');
+
+    // glass
+    Route::get('/glass', 'LayoutController@index');
 });
 
 //Route for admin

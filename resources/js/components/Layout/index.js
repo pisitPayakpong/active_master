@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Layout, Breadcrumb } from "antd";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 import Header from "../Header";
 import Menu from "../Menu";
@@ -27,9 +28,13 @@ class NavBar extends Component {
             window.location = "/logout";
         }
 
+        axios.defaults.headers.common.Authorization = `Bearer ${Cookies.get(
+            "JWT_TOKEN"
+        )}`;
+
         return (
-            <div>
-                <Layout>
+            <div style={{ height: "100%" }}>
+                <Layout style={{ height: "-webkit-fill-available" }}>
                     <Menu
                         collapsed={collapsed}
                         toggleCollapsed={this.toggleCollapsed}
