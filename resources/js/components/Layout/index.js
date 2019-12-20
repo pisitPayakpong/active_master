@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 
 import Header from "../Header";
-import Menu from "../Menu";
+import Menu from "./../Menu";
 import ContentRoute from "../Content";
 // import FormLogin from "../FormLogin";
 
