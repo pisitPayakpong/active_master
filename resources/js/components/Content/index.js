@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import User from "../User/UserContainer";
 import Dashboard from "../Dashboard";
-import ShopTable from "../ShopTable";
+import Shop from "../Shop";
 import MachineTable from "../MachineTable";
 import GlassTable from "../GlassTable";
 
@@ -30,7 +30,7 @@ class ContentRoute extends Component {
                     <User />
                 </Route>
                 <Route path="/shop">
-                    <ShopTable />
+                    <Shop />
                 </Route>
                 <Route path="/machine">
                     <MachineTable />

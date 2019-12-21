@@ -149,33 +149,39 @@ class App extends Component {
             {
                 title: "Station",
                 dataIndex: "tag",
-                render: image => this.renderImage(image)
+                render: image => this.renderImage(image),
+                width: "5%"
             },
             {
                 title: "Serial Number",
                 dataIndex: "sn",
-                sorter: true
+                sorter: true,
+                width: "15%"
             },
             {
                 title: "Type",
                 dataIndex: "type",
-                filters: options?.data
+                filters: options?.data,
+                width: "10%"
             },
             {
                 title: "Machine ID",
                 dataIndex: "machineId",
-                sorter: true
+                sorter: true,
+                width: "20%"
             },
             {
                 title: "Status",
                 dataIndex: "status",
                 sorter: true,
-                render: status => this.renderStatus(status)
+                render: status => this.renderStatus(status),
+                width: "20%"
             },
             {
                 title: "date Time",
                 dataIndex: "dateTime",
-                sorter: true
+                sorter: true,
+                width: "20%"
             },
             {
                 title: "Map",
@@ -186,7 +192,8 @@ class App extends Component {
                             renderContents={() => <SimpleMap data={row} />}
                         />
                     );
-                }
+                },
+                width: "10%"
             }
         ];
 
@@ -202,7 +209,7 @@ class App extends Component {
                     pagination={pagination}
                     loading={loading}
                     onChange={this.handleTableChange}
-                    scroll={{ x: 1500, y: 300 }}
+                    scroll={{ x: 1000, y: 300 }}
                 />
             </LayoutContent>
         );

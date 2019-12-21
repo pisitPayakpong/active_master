@@ -29,7 +29,7 @@ class SimpleMap extends Component {
             lng: parseFloat(data?.lng)
         };
 
-        if (!data?.lat || !data?.lng) {
+        if (!center?.lat || !center?.lng) {
             return <div>Not Found lat lng</div>;
         }
 
@@ -42,8 +42,8 @@ class SimpleMap extends Component {
                     defaultZoom={this.props.zoom}
                 >
                     <AnyReactComponent
-                        lat={data?.lat}
-                        lng={data?.lng}
+                        lat={center?.lat}
+                        lng={center?.lng}
                         text={`Machine_${data?.sn}`}
                     />
                 </GoogleMapReact>

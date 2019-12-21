@@ -42,8 +42,11 @@ Route::middleware('auth:api')->group(function () {
     
         // Shop
         Route::prefix('shop')->group(function () {
-            // dd('shop');
             Route::get('/', 'ShopController@index');
+            Route::post('/', 'ShopController@store');
+            Route::get('/{id}', 'ShopController@show');
+            Route::put('/{id}', 'ShopController@update');
+            Route::delete('/{id}', 'ShopController@destroy');
         });
     });
 });

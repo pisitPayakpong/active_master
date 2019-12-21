@@ -9,9 +9,13 @@ use App\Library\QueryHelper;
 use App\Models\User;
 use App\Models\Shop;
 use App\Transformer\ShopTransformer;
+use App\Http\Traits\TraitsHelper;
+use Validator;
 
 class ShopController extends Controller
 {
+    use TraitsHelper;
+
     const LIMIT_PER_PAGE = 10;
     const PAGE = 1;
 
@@ -88,7 +92,30 @@ class ShopController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $userId = auth()->user();
+
+        $params = $request->all();
+        $errors = Validator::make($params, [
+            'name' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
+        ], [
+            'name.required' => 'Name is required.',
+            'lat.required' => 'lat is required.',
+            'lng.required' => 'lng is required.',
+        ])->errors();
+
+        if ($errors->isNotEmpty()) {
+            return $this->responseRequestError($errors->first(), 422);
+        }
+
+        $shop = Shop::create($params);
+
+        $transformer = new ShopTransformer();
+        $userName = User::find($userId)->name;
+        $transformer->setUserName($userName);
+
+        return $this->fractal->item($shop, $transformer);
     }
 
     /**
@@ -99,7 +126,9 @@ class ShopController extends Controller
      */
     public function show($id)
     {
-        //
+        $shop = Shop::findOrFail($id);
+
+        return ['data' => $shop];
     }
 
     /**
@@ -122,7 +151,29 @@ class ShopController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $params = $request->all();
+        $errors = Validator::make($params, [
+            'name' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
+        ], [
+            'name.required' => 'Name is required.',
+            'lat.required' => 'lat is required.',
+            'lng.required' => 'lng is required.',
+        ])->errors();
+
+        if ($errors->isNotEmpty()) {
+            return $this->responseRequestError($errors->first(), 422);
+        }
+
+        $shop = Shop::findOrFail($id);
+
+        $shop->name = $params['name'];
+        $shop->lat = $params['lat'];
+        $shop->lng = $params['lng'];
+        $shop->save();
+
+        return $this->fractal->item($shop, new ShopTransformer());
     }
 
     /**
@@ -133,6 +184,8 @@ class ShopController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $shop = Shop::destroy($id);
+
+        return $this->responseRequestSuccess('Delete Sucesss');
     }
 }

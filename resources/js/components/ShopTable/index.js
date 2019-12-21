@@ -1,23 +1,11 @@
 import React, { Component } from "react";
-import { Table } from "antd";
+import { Table, Button, Layout } from "antd";
 import axios from "axios";
 import { map, filter, toString } from "lodash";
 
 import LayoutContent from "../Core/LayoutContent";
 import Modal from "../Core/Modal";
 import SimpleMap from "../Map/SimpleMap";
-
-const optionRole = [
-    { text: "Super Admin", value: "super_admin" },
-    { text: "Admin", value: "admin" },
-    { text: "Vistor", value: "visitor" }
-];
-
-const transfromRole = key => {
-    return filter(optionRole, role => {
-        return role?.value === key;
-    })[0];
-};
 
 class App extends Component {
     state = {
@@ -87,6 +75,7 @@ class App extends Component {
     };
 
     render() {
+        const { handleSetStep, handleFetchValue, handleDelete } = this.props;
         const { data, loading, pagination } = this.state;
 
         const columns = [
@@ -101,26 +90,14 @@ class App extends Component {
                 dataIndex: "name",
                 sorter: true,
                 render: name => name,
-                width: "40%"
+                width: "20%"
             },
-            // {
-            //     title: "lat",
-            //     dataIndex: "lat",
-            //     filters: optionRole,
-            //     width: "20%",
-            //     render: value => {
-            //         return transfromRole(value)?.text;
-            //     }
-            // },
-            // {
-            //     title: "lng",
-            //     dataIndex: "lng",
-            //     filters: optionRole,
-            //     width: "20%",
-            //     render: value => {
-            //         return transfromRole(value)?.text;
-            //     }
-            // },
+            {
+                title: "Manager",
+                dataIndex: "user_name",
+                width: "20%",
+                sorter: true
+            },
             {
                 title: "Map",
                 render: row => {
@@ -131,7 +108,38 @@ class App extends Component {
                         />
                     );
                 },
-                width: "40%"
+                width: "20%"
+            },
+            {
+                title: "Action",
+                width: "20%",
+                render: (value, record) => {
+                    return (
+                        <>
+                            <Button
+                                onClick={() => {
+                                    handleSetStep("formEdit");
+                                    handleFetchValue(record?.id);
+                                }}
+                                style={{ marginRight: 5 }}
+                            >
+                                Edit
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    handleDelete(record?.id);
+                                    this.fetchData();
+                                }}
+                                style={{
+                                    backgroundColor: "#ff4d4f",
+                                    color: "white"
+                                }}
+                            >
+                                Delete
+                            </Button>
+                        </>
+                    );
+                }
             }
         ];
 
