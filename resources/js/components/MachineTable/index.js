@@ -209,7 +209,7 @@ class App extends Component {
                     pagination={pagination}
                     loading={loading}
                     onChange={this.handleTableChange}
-                    scroll={{ x: 1000, y: 300 }}
+                    scroll={{ x: 1000, y: 1000 }}
                 />
             </LayoutContent>
         );
