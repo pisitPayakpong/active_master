@@ -7,13 +7,18 @@ use App\Http\Response\FractalResponse;
 
 use App\Library\QueryHelper;
 use App\Models\Machine;
+use App\Models\User;
 use App\Transformer\MachineTransformer;
 use App\Transformer\OptionTransformer;
+use App\Http\Traits\TraitsHelper;
 
+use Validator;
 use DB;
 
 class MachineController extends Controller
 {
+    use TraitsHelper;
+
     const LIMIT_PER_PAGE = 10;
     const PAGE = 1;
 
@@ -84,7 +89,36 @@ class MachineController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $userId = auth()->user();
+
+        $params = $request->all();
+        $errors = Validator::make($params, [
+            'sn' => 'required',
+            'type' => 'required',
+            'machineID' => 'required',
+            'status' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
+        ], [
+            'sn.required' => 'Name is required.',
+            'type.required' => 'Name is required.',
+            'machineID.required' => 'Name is required.',
+            'status.required' => 'Name is required.',
+            'lat.required' => 'lat is required.',
+            'lng.required' => 'lng is required.',
+        ])->errors();
+
+        if ($errors->isNotEmpty()) {
+            return $this->responseRequestError($errors->first(), 422);
+        }
+
+        $params['user_id'] = $userId;
+        $params['user'] = User::find($userId)->name;
+
+        \Log::info('$params : '.print_r($params, true));
+        $machine = Machine::create($params);
+
+        return $this->fractal->item($machine, new MachineTransformer());
     }
 
     /**
@@ -95,7 +129,9 @@ class MachineController extends Controller
      */
     public function show($id)
     {
-        //
+        $machine = Machine::findOrFail($id);
+
+        return ['data' => $machine];
     }
 
     /**
@@ -118,7 +154,40 @@ class MachineController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $userId = auth()->user();
+
+        $params = $request->all();
+        $errors = Validator::make($params, [
+            'sn' => 'required',
+            'type' => 'required',
+            'machineID' => 'required',
+            'status' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
+        ], [
+            'sn.required' => 'sn is required.',
+            'type.required' => 'type is required.',
+            'machineID.required' => 'machineID is required.',
+            'status.required' => 'status is required.',
+            'lat.required' => 'lat is required.',
+            'lng.required' => 'lng is required.',
+        ])->errors();
+
+        if ($errors->isNotEmpty()) {
+            return $this->responseRequestError($errors->first(), 422);
+        }
+
+        $machine = Machine::findOrFail($id);
+
+        $machine->sn = $params['sn'];
+        $machine->type = $params['type'];
+        $machine->machineID = $params['machineID'];
+        $machine->status = $params['status'];
+        $machine->lat = $params['lat'];
+        $machine->lng = $params['lng'];
+        $machine->save();
+
+        return $this->fractal->item($machine, new MachineTransformer());
     }
 
     /**
@@ -129,7 +198,9 @@ class MachineController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $machine = Machine::destroy($id);
+
+        return $this->responseRequestSuccess('Delete Sucesss');
     }
 
     public function getOptions(Request $request)

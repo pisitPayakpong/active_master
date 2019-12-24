@@ -15,6 +15,7 @@ class MachineTransformer extends TransformerAbstract
         $tag = trim($machine->sn).".jpg";
       
         return [
+          'id' => $machine->id,
           'tag' => $tag,
           'sn'  => $machine->sn,
           'type' => $machine->type,

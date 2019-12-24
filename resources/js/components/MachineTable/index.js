@@ -120,7 +120,7 @@ class App extends Component {
                 icon="poweroff"
                 size="large"
                 style={{
-                    width: "45%",
+                    width: "100%",
                     backgroundColor: this.getColor(status),
                     border: "0px"
                 }}
@@ -143,6 +143,7 @@ class App extends Component {
     };
 
     render() {
+        const { handleSetStep, handleFetchValue, handleDelete } = this.props;
         const { data, loading, pagination, options } = this.state;
 
         const columns = [
@@ -175,13 +176,13 @@ class App extends Component {
                 dataIndex: "status",
                 sorter: true,
                 render: status => this.renderStatus(status),
-                width: "20%"
+                width: "10%"
             },
             {
-                title: "date Time",
+                title: "Date Time",
                 dataIndex: "dateTime",
                 sorter: true,
-                width: "20%"
+                width: "10%"
             },
             {
                 title: "Map",
@@ -194,6 +195,37 @@ class App extends Component {
                     );
                 },
                 width: "10%"
+            },
+            {
+                title: "Action",
+                width: "20%",
+                render: (value, record) => {
+                    return (
+                        <>
+                            <Button
+                                onClick={() => {
+                                    handleSetStep("formEdit");
+                                    handleFetchValue(record?.id);
+                                }}
+                                style={{ marginRight: 5 }}
+                            >
+                                Edit
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    handleDelete(record?.id);
+                                    this.fetchData();
+                                }}
+                                style={{
+                                    backgroundColor: "#ff4d4f",
+                                    color: "white"
+                                }}
+                            >
+                                Delete
+                            </Button>
+                        </>
+                    );
+                }
             }
         ];
 
