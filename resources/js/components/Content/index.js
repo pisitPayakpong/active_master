@@ -5,6 +5,7 @@ import User from "../User/UserContainer";
 import Dashboard from "../Dashboard";
 import Shop from "../Shop";
 import MachineTable from "../MachineTable";
+import Machine from "../Machine";
 import GlassTable from "../GlassTable";
 
 class ContentRoute extends Component {
@@ -33,7 +34,7 @@ class ContentRoute extends Component {
                     <Shop />
                 </Route>
                 <Route path="/machine">
-                    <MachineTable />
+                    <Machine />
                 </Route>
                 <Route path="/glass">
                     <GlassTable />

@@ -22,3 +22,12 @@ export const getOptionRole = () => {
         { text: "Vistor", value: "visitor" }
     ];
 };
+
+export const getOptionStatus = () => {
+    return [
+        // { text: "Super Admin", value: "super_admin" },
+        { text: "READY", value: "READY" },
+        { text: "LOGIN", value: "LOGIN" },
+        { text: "OFF", value: "OFF" }
+    ];
+};

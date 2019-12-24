@@ -37,7 +37,11 @@ Route::middleware('auth:api')->group(function () {
         // machine
         Route::prefix('machine')->group(function () {
             Route::get('/', 'MachineController@index');
+            Route::post('/', 'MachineController@store');
             Route::get('/as_options', 'MachineController@getOptions');
+            Route::get('/{id}', 'MachineController@show');
+            Route::put('/{id}', 'MachineController@update');
+            Route::delete('/{id}', 'MachineController@destroy');
         });
     
         // Shop
