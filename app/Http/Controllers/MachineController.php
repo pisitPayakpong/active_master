@@ -115,7 +115,6 @@ class MachineController extends Controller
         $params['user_id'] = $userId;
         $params['user'] = User::find($userId)->name;
 
-        \Log::info('$params : '.print_r($params, true));
         $machine = Machine::create($params);
 
         return $this->fractal->item($machine, new MachineTransformer());
