@@ -39,3 +39,5 @@ yarn-error.log
 /config/database.php
 /public/css/web2.css
 /laradock
+/public/css/*
+/public/js/*
