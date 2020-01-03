@@ -48,6 +48,7 @@ Route::middleware('auth:api')->group(function () {
         Route::prefix('shop')->group(function () {
             Route::get('/', 'ShopController@index');
             Route::post('/', 'ShopController@store');
+            Route::get('/as_options', 'ShopController@getOptions');
             Route::get('/{id}', 'ShopController@show');
             Route::put('/{id}', 'ShopController@update');
             Route::delete('/{id}', 'ShopController@destroy');

@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Button } from "antd";
+import { Button, Row, Col } from "antd";
 import axios from "axios";
 
 import TableConfig from "../MachineTable";
 import FormMachine from "../FormMachine";
 import Layout from "../Core/LayoutContent";
+import SelectorOption from "../Core/Selector";
 
 import { openNotification } from "../Core/utils";
 
@@ -13,11 +14,14 @@ class Machine extends Component {
         collapsed: false,
         step: "list", // list, form,
         data: [],
-        options: []
+        options: [],
+        shops: [],
+        shopId: null
     };
 
     componentDidMount() {
         this.fetchOptionType();
+        this.handleFetchShops();
     }
 
     toggleCollapsed = () => {
@@ -83,30 +87,64 @@ class Machine extends Component {
             });
     };
 
+    handleFetchShops = () => {
+        axios({
+            url: "/api/test_v1/shop/as_options",
+            method: "get",
+            data: {
+                results: 10
+            },
+            type: "json"
+        }).then(data => {
+            this.setState({
+                loading: false,
+                shops: data?.data
+            });
+        });
+    };
+
+    handleSetShopId = shopId => {
+        this.setState({
+            shopId: shopId
+        });
+    };
+
     render() {
-        const { step, data, options } = this.state;
+        const { step, data, options, shops, shopId } = this.state;
 
         return (
             <>
                 {step === "list" && (
                     <>
-                        <Layout
-                            minHeight="50px"
-                            padding="15px 50px"
-                            textAlign="right"
-                        >
-                            <Button
-                                type="primary"
-                                onClick={() => this.handleSetStep("formCreate")}
-                            >
-                                Create Machine
-                            </Button>
+                        <Layout minHeight="50px" padding="15px 30px">
+                            <Row>
+                                <Col span={16} style={{ textAlign: "left" }}>
+                                    <SelectorOption
+                                        value={shopId}
+                                        data={shops?.data}
+                                        onChange={this.handleSetShopId}
+                                    />
+                                </Col>
+                                <Col span={8} style={{ textAlign: "right" }}>
+                                    <Button
+                                        type="primary"
+                                        onClick={() =>
+                                            this.handleSetStep("formCreate")
+                                        }
+                                    >
+                                        Create Machine
+                                    </Button>
+                                </Col>
+                            </Row>
                         </Layout>
-                        <TableConfig
-                            handleSetStep={this.handleSetStep}
-                            handleFetchValue={this.handleFetchValue}
-                            handleDelete={this.handleDelete}
-                        />
+                        {shopId && (
+                            <TableConfig
+                                shopId={shopId}
+                                handleSetStep={this.handleSetStep}
+                                handleFetchValue={this.handleFetchValue}
+                                handleDelete={this.handleDelete}
+                            />
+                        )}
                     </>
                 )}
                 {step === "formCreate" && (
@@ -114,6 +152,8 @@ class Machine extends Component {
                         handleSetStep={this.handleSetStep}
                         mode="create"
                         options={options}
+                        shops={shops}
+                        shopId={shopId}
                     />
                 )}
                 {step === "formEdit" && (
@@ -121,6 +161,8 @@ class Machine extends Component {
                         handleSetStep={this.handleSetStep}
                         mode="edit"
                         options={options}
+                        shops={shops}
+                        shopId={shopId}
                         {...data}
                     />
                 )}

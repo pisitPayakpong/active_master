@@ -18,7 +18,6 @@ class DashboardContainer extends Component {
         return (
             <>
                 <CardComponent />
-                <MachineTable />
                 <GlassTable />
             </>
         );

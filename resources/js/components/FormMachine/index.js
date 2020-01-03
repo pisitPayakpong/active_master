@@ -1,14 +1,10 @@
 import React, { Component } from "react";
 import { Form, Input, Tooltip, Icon, Button, Select, InputNumber } from "antd";
 import axios from "axios";
-import { map } from "lodash";
+import { map, find } from "lodash";
 
 import Layout from "../Core/LayoutContent";
-import {
-    openNotification,
-    getOptionRole,
-    getOptionStatus
-} from "../Core/utils";
+import { openNotification, getOptionStatus } from "../Core/utils";
 
 class RegistrationForm extends Component {
     state = {
@@ -156,6 +152,33 @@ class RegistrationForm extends Component {
         );
     };
 
+    renderSelectShop = () => {
+        const { getFieldDecorator } = this.props.form;
+        const { data, shops, shopId } = this.props;
+
+        const defaultShop = find(shops?.data, shop => {
+            return shop.value == shopId;
+        });
+
+        return (
+            <Form.Item label="Shop">
+                {getFieldDecorator("shopId", {
+                    initialValue: defaultShop?.value,
+                    rules: [
+                        {
+                            required: true,
+                            message: "Please select your Shop!"
+                        }
+                    ]
+                })(
+                    <Select placeholder="Select a option and change input text above">
+                        {this.renderOption(shops?.data)}
+                    </Select>
+                )}
+            </Form.Item>
+        );
+    };
+
     render() {
         const { getFieldDecorator } = this.props.form;
         const { handleSetStep, mode, data } = this.props;
@@ -185,6 +208,7 @@ class RegistrationForm extends Component {
             <Layout style={{ padding: "100px 500px" }}>
                 {mode === "create" ? "Register" : "Edit"}
                 <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+                    {this.renderSelectShop()}
                     <Form.Item label={<span>Serial Number&nbsp;</span>}>
                         {getFieldDecorator("sn", {
                             initialValue: data?.sn,

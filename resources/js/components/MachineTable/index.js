@@ -7,6 +7,7 @@ import styled from "styled-components";
 import LayoutContent from "../Core/LayoutContent";
 import Modal from "../Core/Modal";
 import SimpleMap from "../Map/SimpleMap";
+import { confirmModal } from "../Core/ModalConfirm";
 
 const DivTitle = styled.div`
     font-size: 22px;
@@ -24,6 +25,12 @@ class App extends Component {
 
     componentDidMount() {
         this.fetchData();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps?.shopId !== this.props.shopId) {
+            this.fetchData();
+        }
     }
 
     handleTableChange = (pagination, filters, sorter) => {
@@ -64,6 +71,7 @@ class App extends Component {
     };
 
     fetchData = (params = {}) => {
+        const { shopId } = this.props;
         this.setState({ loading: true });
         axios({
             url: "/api/test_v1/machine",
@@ -73,6 +81,7 @@ class App extends Component {
             },
             params: {
                 ...params,
+                shopId: shopId,
                 role: toString(params?.role),
                 sortOrder: params?.sortOrder === "ascend" ? "asc" : "desc"
             },
@@ -213,8 +222,13 @@ class App extends Component {
                             </Button>
                             <Button
                                 onClick={() => {
-                                    handleDelete(record?.id);
-                                    this.fetchData();
+                                    confirmModal({
+                                        title: "Do you have delete item ?",
+                                        callbackOk: () => {
+                                            handleDelete(record?.id);
+                                            this.fetchData();
+                                        }
+                                    });
                                 }}
                                 style={{
                                     backgroundColor: "#ff4d4f",
