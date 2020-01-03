@@ -8,6 +8,7 @@ use App\Http\Response\FractalResponse;
 use App\Library\QueryHelper;
 use App\Models\Machine;
 use App\Models\User;
+use App\Models\ShopMachine;
 use App\Transformer\MachineTransformer;
 use App\Transformer\OptionTransformer;
 use App\Http\Traits\TraitsHelper;
@@ -47,7 +48,9 @@ class MachineController extends Controller
         $page = $params['page'] ?? self::PAGE;
         $column = '*';
         
-        $machine = Machine::select('*');
+        $machine = Machine::select('*', 'machine.id as id')
+                            ->join('shop_machine', 'shop_machine.machine_id', '=', 'machine.id')
+                            ->where('shop_machine.shop_id', $params['shopId']);
 
         if (isset($params['type'])) {
             $types = isset($params['type']) ? explode(",", $params['type']) : [];
@@ -93,6 +96,7 @@ class MachineController extends Controller
 
         $params = $request->all();
         $errors = Validator::make($params, [
+            'shopId' => 'required',
             'sn' => 'required',
             'type' => 'required',
             'machineID' => 'required',
@@ -100,6 +104,7 @@ class MachineController extends Controller
             'lat' => 'required',
             'lng' => 'required',
         ], [
+            'shopId.required' => 'Shop Id is required.',
             'sn.required' => 'Name is required.',
             'type.required' => 'Name is required.',
             'machineID.required' => 'Name is required.',
@@ -116,6 +121,11 @@ class MachineController extends Controller
         $params['user'] = User::find($userId)->name;
 
         $machine = Machine::create($params);
+
+        ShopMachine::create([
+            'shop_id' => $params['shopId'],
+            'machine_id' => $machine->id
+        ]);
 
         return $this->fractal->item($machine, new MachineTransformer());
     }
@@ -157,6 +167,7 @@ class MachineController extends Controller
 
         $params = $request->all();
         $errors = Validator::make($params, [
+            'shopId' => 'required',
             'sn' => 'required',
             'type' => 'required',
             'machineID' => 'required',
@@ -164,6 +175,7 @@ class MachineController extends Controller
             'lat' => 'required',
             'lng' => 'required',
         ], [
+            'shopId.required' => 'Shop Id is required.',
             'sn.required' => 'sn is required.',
             'type.required' => 'type is required.',
             'machineID.required' => 'machineID is required.',
@@ -186,6 +198,11 @@ class MachineController extends Controller
         $machine->lng = $params['lng'];
         $machine->save();
 
+        $shopMachine = ShopMachine::where('machine_id', $id)->first();
+
+        $shopMachine->shop_id = $params['shopId'];
+        $shopMachine->save();
+
         return $this->fractal->item($machine, new MachineTransformer());
     }
 
@@ -197,6 +214,7 @@ class MachineController extends Controller
      */
     public function destroy($id)
     {
+        $shopMachine = ShopMachine::where('machine_id', $id)->delete();
         $machine = Machine::destroy($id);
 
         return $this->responseRequestSuccess('Delete Sucesss');

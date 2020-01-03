@@ -9,6 +9,7 @@ use App\Library\QueryHelper;
 use App\Models\User;
 use App\Models\Shop;
 use App\Transformer\ShopTransformer;
+use App\Transformer\OptionTransformer;
 use App\Http\Traits\TraitsHelper;
 use Validator;
 
@@ -187,5 +188,14 @@ class ShopController extends Controller
         $shop = Shop::destroy($id);
 
         return $this->responseRequestSuccess('Delete Sucesss');
+    }
+
+
+    public function getOptions(Request $request)
+    {
+        $shops = Shop::select('name as text', 'id as value')
+                        ->get();
+
+        return $this->fractal->collection($shops, new OptionTransformer());
     }
 }

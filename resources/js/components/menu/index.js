@@ -17,9 +17,9 @@ const MENU_CONFIG = [
         title: "Mangement",
         subMenu: [
             { key: "dashboard", title: "Dashboard", path: "/dashboard" },
-            { key: "machine", title: "Machine", path: "/machine" },
-            { key: "shop", title: "Shop", path: "/shop" },
             { key: "user", title: "User", path: "/user" },
+            { key: "shop", title: "Shop", path: "/shop" },
+            { key: "machine", title: "Machine", path: "/machine" },
             { key: "glass", title: "Glass", path: "/glass" }
             // { key: "water", title: "water", path: "/water" }
         ]
