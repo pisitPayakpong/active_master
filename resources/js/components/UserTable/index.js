@@ -90,6 +90,7 @@ class App extends Component {
                 render: image => {
                     return (
                         <Avatar
+                            shape="square"
                             src={`${window.location.origin}/${image}`}
                             size={70}
                         />

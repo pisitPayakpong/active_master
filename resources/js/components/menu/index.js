@@ -29,7 +29,9 @@ const MENU_CONFIG = [
 class NavBar extends Component {
     state = {
         current: "",
-        openKeys: []
+        openKeys: [],
+        imgUrl: "",
+        menuConfigs: []
     };
 
     componentDidMount() {
@@ -37,7 +39,16 @@ class NavBar extends Component {
         const current = pathname.substring(1).replace("/", "_");
         let openKeys = ["0"];
 
-        this.setState({ current, openKeys });
+        const authMenus = JSON.parse(
+            document.getElementById("initial-state").innerHTML
+        );
+
+        this.setState({
+            current,
+            openKeys,
+            imgUrl: authMenus?.imgUrl,
+            menuConfigs: authMenus?.render_menu
+        });
     }
 
     onOpenChange = openKeys => {
@@ -80,13 +91,11 @@ class NavBar extends Component {
     };
 
     authMenu = configs => {
-        const authMenus = JSON.parse(
-            document.getElementById("initial-state").innerHTML
-        );
+        const { menuConfigs } = this.state;
 
         return map(configs, config => {
             const subMenu = filter(config.subMenu, menu => {
-                return includes(authMenus?.render_menu, menu.key);
+                return includes(menuConfigs, menu.key);
             });
 
             return {
@@ -98,7 +107,7 @@ class NavBar extends Component {
 
     render() {
         const { collapsed, toggleCollapsed } = this.props;
-        const { current, openKeys } = this.state;
+        const { current, openKeys, imgUrl } = this.state;
         const menuConfig = this.authMenu(MENU_CONFIG);
 
         return (
@@ -116,7 +125,11 @@ class NavBar extends Component {
                     <DivLogo
                         style={{ backgroundColor: "#001529", padding: 20 }}
                     >
-                        <Avatar shape="square" size={64} icon="user" />
+                        <Avatar
+                            shape="square"
+                            size={64}
+                            src={`${window.location.origin}/${imgUrl}`}
+                        />
                     </DivLogo>
                     <Menu
                         theme="dark"
