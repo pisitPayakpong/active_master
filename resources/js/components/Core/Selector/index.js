@@ -14,14 +14,24 @@ class Selector extends Component {
     };
 
     renderSelectStatus = () => {
-        const { data, onChange, value } = this.props;
+        const {
+            data,
+            onChange,
+            value,
+            width = "150px",
+            renderTitle = true
+        } = this.props;
         return (
             <>
-                Select: <span> </span>
+                {renderTitle && (
+                    <>
+                        Select: <span> </span>
+                    </>
+                )}
                 <Select
                     value={value}
                     placeholder="Select a option and change input text above"
-                    style={{ width: "150px" }}
+                    style={{ width: width }}
                     onChange={onChange}
                 >
                     {this.renderOption(data)}

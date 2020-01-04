@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+
+use App\Http\Controllers\Controller;
 use App\Http\Response\FractalResponse;
+
 use App\Models\User;
 use App\Transformer\UserTransformer;
+
 use App\Library\JwtLibrary;
-use Illuminate\Validation\Rule;
+use App\Library\Image;
+
 use Validator;
 use DB;
 
@@ -78,6 +83,9 @@ class UserController extends Controller
         ],
             'password' => 'required',
             'name' => 'required',
+            'address' => 'required',
+            'province' => 'required',
+            'tel' => 'required',
         ], [
             'email.required' => 'Email is required.',
             'email.email' => 'Invalid email address.',
@@ -85,6 +93,9 @@ class UserController extends Controller
             'password.required' => 'Password is required.',
             'name.required' => 'Name is required.',
             'role_type.required' => 'Role Type is required.',
+            'address.required' => 'Address is required.',
+            'province.required' => 'Province is required.',
+            'tel.required' => 'Tel is required.',
         ])->errors();
 
         if ($errors->isNotEmpty()) {
@@ -133,15 +144,19 @@ class UserController extends Controller
         $params = $request->all();
         $errors = Validator::make($params, [
             'email' => 'required',
-            'password' => 'required',
             'name' => 'required',
-            'role' => 'required'
+            'role' => 'required',
+            'address' => 'required',
+            'province' => 'required',
+            'tel' => 'required',
         ], [
             'email.required' => 'Email is required.',
             'email.email' => 'Invalid email address.',
-            'password.required' => 'Password is required.',
             'name.required' => 'Name is required.',
             'role.required' => 'Role is required.',
+            'address.required' => 'Address is required.',
+            'province.required' => 'Province is required.',
+            'tel.required' => 'Tel is required.',
         ])->errors();
 
         if ($errors->isNotEmpty()) {
@@ -152,8 +167,11 @@ class UserController extends Controller
 
         $user->name = $params['name'];
         $user->email = $params['email'];
-        $user->password = Hash::make($params['password']);
         $user->role = $params['role'];
+        $user->address = $params['address'];
+        $user->province = $params['province'];
+        $user->tel = $params['tel'];
+        $user->image = $params['image'] ?? null;
         $user->save();
 
         return $this->fractal->item($user, new UserTransformer());
@@ -184,6 +202,26 @@ class UserController extends Controller
         } else {
             return $this->responseRequestError("Username or password is incorrect");
         }
+    }
+
+    public function updatePassword(Request $request, $id)
+    {
+        $params = $request->all();
+        $errors = Validator::make($params, [
+            'password' => 'required',
+        ], [
+            'password.required' => 'Password is required.',
+        ])->errors();
+
+        if ($errors->isNotEmpty()) {
+            return $this->responseRequestError($errors->first(), 422);
+        }
+
+        $user = User::findOrFail($id);
+        $user->password = Hash::make($params['password']);
+        $user->save();
+        
+        return $this->responseRequestSuccess($user);
     }
 
     protected function responseRequestSuccess($ret)

@@ -13,6 +13,7 @@ class OptionTransformer extends TransformerAbstract
     {
         return [
           'text' => $data->text,
+          'text_en' => $data->text_en ?? $data->text,
           'value'  => $data->value,
         ];
     }

@@ -5,6 +5,7 @@ import axios from "axios";
 import TableConfig from "../UserTable";
 import FormUser from "../FormUser";
 import Layout from "../Core/LayoutContent";
+import FormChangePassword from "../FormChangePassword";
 
 import { openNotification } from "../Core/utils";
 
@@ -13,9 +14,14 @@ class UserContainer extends Component {
         collapsed: false,
         step: "list", // list, form,
         dataSource: {
-            user: ""
+            user: "",
+            provinces: []
         }
     };
+
+    componentDidMount() {
+        this.handleFetchProvinces();
+    }
 
     toggleCollapsed = () => {
         this.setState({
@@ -41,7 +47,7 @@ class UserContainer extends Component {
         }).then(data => {
             this.setState({
                 loading: false,
-                dataSource: { user: data?.data }
+                dataSource: { ...this.state.dataSource, user: data?.data }
             });
         });
     };
@@ -64,11 +70,26 @@ class UserContainer extends Component {
             });
     };
 
+    handleFetchProvinces = () => {
+        this.setState({ loading: true });
+        axios({
+            url: `/api/test_v1/province/as_options`,
+            method: "get",
+            type: "json"
+        }).then(data => {
+            this.setState({
+                loading: false,
+                dataSource: { ...this.state.dataSource, provinces: data?.data }
+            });
+        });
+    };
+
     render() {
         const {
             step,
-            dataSource: { user }
+            dataSource: { user, provinces }
         } = this.state;
+
         return (
             <>
                 {step === "list" && (
@@ -96,12 +117,20 @@ class UserContainer extends Component {
                     <FormUser
                         handleSetStep={this.handleSetStep}
                         mode="create"
+                        provinces={provinces}
                     />
                 )}
                 {step === "formEdit" && (
                     <FormUser
                         handleSetStep={this.handleSetStep}
                         mode="edit"
+                        data={user?.data}
+                        provinces={provinces}
+                    />
+                )}
+                {step === "formChangePassword" && (
+                    <FormChangePassword
+                        handleSetStep={this.handleSetStep}
                         data={user?.data}
                     />
                 )}

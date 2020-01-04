@@ -193,7 +193,10 @@ class ShopController extends Controller
 
     public function getOptions(Request $request)
     {
-        $shops = Shop::select('name as text', 'id as value')
+        $userId = auth()->user();
+        $shops = Shop::select('shops.name as text', 'shops.id as value')
+                        ->join('user_shop', 'user_shop.shop_id', '=', 'shops.id')
+                        ->where('user_shop.user_id', $userId)
                         ->get();
 
         return $this->fractal->collection($shops, new OptionTransformer());

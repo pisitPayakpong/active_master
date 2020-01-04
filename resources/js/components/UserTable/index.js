@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Table, Button } from "antd";
+import { Table, Button, Avatar } from "antd";
 import axios from "axios";
 import { map, filter, toString } from "lodash";
 
@@ -85,6 +85,18 @@ class App extends Component {
                 sorter: true
             },
             {
+                title: "Image",
+                dataIndex: "image",
+                render: image => {
+                    return (
+                        <Avatar
+                            src={`${window.location.origin}/${image}`}
+                            size={70}
+                        />
+                    );
+                }
+            },
+            {
                 title: "Name",
                 dataIndex: "name",
                 sorter: true,
@@ -102,14 +114,14 @@ class App extends Component {
                 title: "Role",
                 dataIndex: "role",
                 filters: getOptionRole(),
-                width: "20%",
+                width: "10%",
                 render: value => {
                     return transfromRole(value)?.text;
                 }
             },
             {
                 title: "Action",
-                width: "20%",
+                width: "10%",
                 render: (value, record) => {
                     return (
                         <>
@@ -121,6 +133,16 @@ class App extends Component {
                                 style={{ marginRight: 5 }}
                             >
                                 Edit
+                            </Button>
+                            <Button
+                                type="primary"
+                                onClick={() => {
+                                    handleSetStep("formChangePassword");
+                                    handleFetchUser(record?.id);
+                                }}
+                                style={{ marginRight: 5 }}
+                            >
+                                Change Password
                             </Button>
                             <Button
                                 onClick={() => {
