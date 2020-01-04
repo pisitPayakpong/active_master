@@ -116,15 +116,19 @@ class RegistrationForm extends Component {
             method: "post",
             data: data,
             type: "json"
-        }).then(res => {
-            this.setState({
-                imgUrl: res?.data?.data?.url
-            });
+        })
+            .then(res => {
+                this.setState({
+                    imgUrl: res?.data?.data?.url
+                });
 
-            this.props.form.setFieldsValue({
-                image: res?.data?.data?.url
+                this.props.form.setFieldsValue({
+                    image: res?.data?.data?.url
+                });
+            })
+            .catch(e => {
+                openNotification(false, e?.response?.statusText);
             });
-        });
     };
 
     handleSetProvince = province => {
