@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 
+// use Intervention\Image\ImageManagerStatic as Image;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,6 +28,8 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/{id}', 'UserController@show');
             Route::put('/{id}', 'UserController@update');
             Route::delete('/{id}', 'UserController@destroy');
+
+            Route::put('/password/{id}', 'UserController@updatePassword');
         });
     
         // glass
@@ -52,6 +56,16 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/{id}', 'ShopController@show');
             Route::put('/{id}', 'ShopController@update');
             Route::delete('/{id}', 'ShopController@destroy');
+        });
+
+        // Province
+        Route::prefix('province')->group(function () {
+            Route::get('/as_options', 'ProvinceController@getOptions');
+        });
+
+        // Image
+        Route::prefix('image')->group(function () {
+            Route::post('/', 'ImageController@create');
         });
     });
 });

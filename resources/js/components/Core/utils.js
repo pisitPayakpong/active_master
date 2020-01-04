@@ -2,7 +2,6 @@ import React from "react";
 import { notification, Icon } from "antd";
 
 export const openNotification = (status = true, description = "Success") => {
-    console.log({ status, description });
     notification.open({
         message: "Status",
         description: status ? "Success" : description,
