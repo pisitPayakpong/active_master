@@ -30,8 +30,10 @@ class LayoutController extends Controller
         if (auth()->user()->isAdmin()) {
             $renderMenu = array_merge($renderMenu, ['user', 'register']);
         }
+        
+        $imgUrl = auth()->user()->image;
 
-        $data = ['role' => auth()->user()->role, 'render_menu' => $renderMenu ];
+        $data = ['role' => auth()->user()->role, 'render_menu' => $renderMenu , 'imgUrl' => $imgUrl];
         
         return view('main', ['viewState' => collect($data)]);
     }
