@@ -24,6 +24,8 @@ class MachineTransformer extends TransformerAbstract
           'dateTime' => $this->transformDateToDateTime($machine->stamp),
           'lat' => $machine->lat,
           'lng' => $machine->lng,
+          'expire_date' => $machine->expire_date,
+          'bills' => $machine->bills ?? []
         ];
     }
 }

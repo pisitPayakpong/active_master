@@ -8,6 +8,7 @@ use App\Http\Response\FractalResponse;
 use App\Library\QueryHelper;
 use App\Models\User;
 use App\Models\Shop;
+use App\Models\UserShop;
 use App\Transformer\ShopTransformer;
 use App\Transformer\OptionTransformer;
 use App\Http\Traits\TraitsHelper;
@@ -49,18 +50,23 @@ class ShopController extends Controller
         $page = $params['page'] ?? self::PAGE;
         $column = '*';
         $userId = auth()->user();
+        $user = User::findOrFail($userId);
+                    
+        if ($user->role == User::ROLE_ADMIN) {
+            $shop = Shop::select('*');
+        } else {
+            $shop = Shop::select('*', 'users.name as user_name', 'shops.name', 'shops.id')
+            ->join('user_shop', 'user_shop.shop_id', '=', 'shops.id')
+            ->join('users', 'users.id', '=', 'user_shop.user_id')
+            ->where('users.id', $userId);
+        }
 
-        $shop = Shop::select('*', 'users.name as user_name', 'shops.name', 'shops.id')->join('user_shop', 'user_shop.shop_id', '=', 'shops.id')
-                    ->join('users', 'users.id', '=', 'user_shop.user_id')
-                    ->where('users.id', $userId);
 
         $transformer = new ShopTransformer();
-        $userName = User::find($userId)->name;
-        $transformer->setUserName($userName);
+        $transformer->setUserName($user->name);
 
         if (isset($params['sort'])) {
             $query = QueryHelper::getSort($params['sort'], self::MAPPED_COLUMN_WITH_PARAM);
-            // dd($query);
 
             if (!empty($query)) {
                 $shop->orderByRaw($query);
@@ -113,8 +119,22 @@ class ShopController extends Controller
         $shop = Shop::create($params);
 
         $transformer = new ShopTransformer();
-        $userName = User::find($userId)->name;
-        $transformer->setUserName($userName);
+        $user = User::findOrFail($userId);
+        $transformer->setUserName($user->name);
+
+        if (isset($params['users']) && $user->role == User::ROLE_ADMIN) {
+            $userIds = explode(',', $params['users']);
+            
+            $shopUserIds = UserShop::where('shop_id', $shop->id)->delete();
+            $data = collect($userIds)->map(function ($userId) use ($shop) {
+                return [
+                    "shop_id" => $shop->id,
+                    "user_id" => $userId,
+                ];
+            })->toArray();
+
+            UserShop::insert($data);
+        }
 
         return $this->fractal->item($shop, $transformer);
     }
@@ -127,7 +147,8 @@ class ShopController extends Controller
      */
     public function show($id)
     {
-        $shop = Shop::findOrFail($id);
+        $shop = Shop::with('users')->where('id', $id)->first();
+        $shop->userIds = $shop->users->pluck('id')->toArray();
 
         return ['data' => $shop];
     }
@@ -152,6 +173,7 @@ class ShopController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $userId = auth()->user();
         $params = $request->all();
         $errors = Validator::make($params, [
             'name' => 'required',
@@ -173,6 +195,22 @@ class ShopController extends Controller
         $shop->lat = $params['lat'];
         $shop->lng = $params['lng'];
         $shop->save();
+
+        $user = User::findOrFail($userId);
+
+        if (isset($params['users']) && $user->role == User::ROLE_ADMIN) {
+            $userIds = explode(',', $params['users']);
+            
+            $shopUserIds = UserShop::where('shop_id', $id)->delete();
+            $data = collect($userIds)->map(function ($userId) use ($id) {
+                return [
+                    "shop_id" => $id,
+                    "user_id" => $userId,
+                ];
+            })->toArray();
+
+            UserShop::insert($data);
+        }
 
         return $this->fractal->item($shop, new ShopTransformer());
     }

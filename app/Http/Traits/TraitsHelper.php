@@ -5,9 +5,9 @@ use Carbon\Carbon;
 
 trait TraitsHelper
 {
-    public function transformDateToDateTime($dateTime)
+    public function transformDateToDateTime($dateTime = null)
     {
-        $dateTime = new Carbon($dateTime);
+        $dateTime = is_null($dateTime) ? new Carbon() : new Carbon($dateTime);
         return $dateTime->format('Y-m-d H:i:s');
     }
 

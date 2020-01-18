@@ -1,19 +1,29 @@
 import React, { Component } from "react";
 import { Table, Avatar, Button } from "antd";
 import axios from "axios";
-import { map, toString } from "lodash";
+import { map, toString, last } from "lodash";
 import styled from "styled-components";
+import moment from "moment";
 
 import LayoutContent from "../Core/LayoutContent";
+import UploadFile from "../Core/UploadFile";
 import Modal from "../Core/Modal";
 import SimpleMap from "../Map/SimpleMap";
 import { confirmModal } from "../Core/ModalConfirm";
+import { openNotification } from "../Core/utils";
 
 const DivTitle = styled.div`
     font-size: 22px;
     text-align: left;
     padding: 10px 5px;
 `;
+
+const StyledButton = styled(Button)`
+    margin-right: 5px;
+`;
+
+const VISITOR = "visitor";
+const ADMIN = "admin";
 
 class App extends Component {
     state = {
@@ -151,8 +161,100 @@ class App extends Component {
         return;
     };
 
+    updateExpire = id => {
+        axios({
+            url: `/api/test_v1/machine/${id}/expire`,
+            method: "put",
+            type: "json"
+        })
+            .then(data => {})
+            .catch(e => {
+                openNotification(false, e?.response?.statusText);
+            });
+    };
+
+    getColumnUploadFile = () => {
+        const uploadBillconfig = {
+            title: "Upload Bill",
+            render: row => {
+                return (
+                    <Modal
+                        textButton="Upload"
+                        width="850px"
+                        renderContents={() => (
+                            <UploadFile
+                                url="/api/test_v1/machine/bill"
+                                params={{ machine_id: row?.id }}
+                            />
+                        )}
+                    />
+                );
+            },
+            width: "10%"
+        };
+        return uploadBillconfig;
+    };
+
+    extendMachine = record => {
+        const { expire_date } = record;
+        const currentDate = moment();
+        let disabled = !moment(expire_date, "YYYY-MM-DD HH:mm:ss").isSame(
+            currentDate
+        );
+
+        if (!expire_date) {
+            disabled = false;
+        }
+        return disabled ? (
+            <StyledButton type="primary" disabled={disabled}>
+                Extend
+            </StyledButton>
+        ) : (
+            <StyledButton
+                onClick={() => {
+                    confirmModal({
+                        title: "Do you have Extend Machine ?",
+                        callbackOk: () => {
+                            // ajax
+                            this.updateExpire(record?.id);
+                            this.fetchData();
+                        }
+                    });
+                }}
+                style={{
+                    backgroundColor: "#0b8235",
+                    color: "white"
+                }}
+                disabled={disabled}
+            >
+                Extend
+            </StyledButton>
+        );
+    };
+
+    renderPathDownloadFile = () => {
+        const pathFile = {
+            title: "Bill",
+            render: record => {
+                const file = last(record?.bills);
+                return (
+                    <a target="_blank" href={`${file?.path}`} disabled={!file}>
+                        Download
+                    </a>
+                );
+            },
+            width: "10%"
+        };
+        return pathFile;
+    };
+
     render() {
-        const { handleSetStep, handleFetchValue, handleDelete } = this.props;
+        const {
+            handleSetStep,
+            handleFetchValue,
+            handleDelete,
+            currentUser: { role }
+        } = this.props;
         const { data, loading, pagination, options } = this.state;
 
         const columns = [
@@ -166,7 +268,7 @@ class App extends Component {
                 title: "Serial Number",
                 dataIndex: "sn",
                 sorter: true,
-                width: "15%"
+                width: "20%"
             },
             {
                 title: "Type",
@@ -203,15 +305,17 @@ class App extends Component {
                         />
                     );
                 },
-                width: "10%"
+                width: "5%"
             },
+            role === VISITOR ? this.getColumnUploadFile() : {},
             {
                 title: "Action",
-                width: "20%",
+                width: "30%",
                 render: (value, record) => {
                     return (
                         <>
-                            <Button
+                            {role === ADMIN && this.extendMachine(record)}
+                            <StyledButton
                                 onClick={() => {
                                     handleSetStep("formEdit");
                                     handleFetchValue(record?.id);
@@ -219,8 +323,8 @@ class App extends Component {
                                 style={{ marginRight: 5 }}
                             >
                                 Edit
-                            </Button>
-                            <Button
+                            </StyledButton>
+                            <StyledButton
                                 onClick={() => {
                                     confirmModal({
                                         title: "Do you have delete item ?",
@@ -236,11 +340,12 @@ class App extends Component {
                                 }}
                             >
                                 Delete
-                            </Button>
+                            </StyledButton>
                         </>
                     );
                 }
-            }
+            },
+            role === ADMIN ? this.renderPathDownloadFile() : {}
         ];
 
         return (

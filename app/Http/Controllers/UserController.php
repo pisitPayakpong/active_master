@@ -11,6 +11,7 @@ use App\Http\Response\FractalResponse;
 
 use App\Models\User;
 use App\Transformer\UserTransformer;
+use App\Transformer\OptionTransformer;
 
 use App\Library\JwtLibrary;
 use App\Library\Image;
@@ -222,6 +223,13 @@ class UserController extends Controller
         $user->save();
         
         return $this->responseRequestSuccess($user);
+    }
+
+    public function getOptions(Request $request)
+    {
+        $users = User::select('id as value', 'name as text')->get();
+
+        return $this->fractal->collection($users, new OptionTransformer());
     }
 
     protected function responseRequestSuccess($ret)

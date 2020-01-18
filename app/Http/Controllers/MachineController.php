@@ -3,16 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Response\FractalResponse;
 
 use App\Library\QueryHelper;
 use App\Models\Machine;
 use App\Models\User;
 use App\Models\ShopMachine;
+use App\Models\Bill;
+use App\Models\BillMachine;
 use App\Transformer\MachineTransformer;
 use App\Transformer\OptionTransformer;
 use App\Http\Traits\TraitsHelper;
 
+use Carbon\Carbon;
 use Validator;
 use DB;
 
@@ -47,8 +51,8 @@ class MachineController extends Controller
         $limit = $params['limit'] ?? self::LIMIT_PER_PAGE;
         $page = $params['page'] ?? self::PAGE;
         $column = '*';
-        
-        $machine = Machine::select('*', 'machine.id as id')
+
+        $machine = Machine::with('bills')->select('*', 'machine.id as id')
                             ->join('shop_machine', 'shop_machine.machine_id', '=', 'machine.id')
                             ->where('shop_machine.shop_id', $params['shopId']);
 
@@ -227,5 +231,80 @@ class MachineController extends Controller
                         ->get();
 
         return $this->fractal->collection($types, new OptionTransformer());
+    }
+
+    public function uploadFile(Request $request)
+    {
+        $userId = auth()->user();
+        $errors = Validator::make($request->all(), [
+            'machine_id' => 'required',
+            'folder' => 'required',
+            'file' => 'required|file|max:4000'
+        ], [
+            'machine_id.required' => 'Machine ID is required.',
+            'file.required' => 'File is required.',
+        ])->errors();
+
+        if ($errors->isNotEmpty()) {
+            return $this->responseRequestError($errors->first(), 422);
+        }
+
+        if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
+            return $this->responseRequestError($errors->first(), 404);
+        }
+
+        $machine_id = $request->machine_id;
+        $folder = $request->folder;
+        $file = $request->file('file');
+        $ext = $file->extension();
+        $name = str_random(20).'.'.$ext ;
+        $path = Storage::disk('public')->putFileAs(
+            $folder,
+            $file,
+            $name
+        );
+
+        $bill = new Bill;
+        $bill->machine_id = $machine_id;
+        $bill->user_id = $userId;
+        $bill->datetime = $this->transformDateToDateTime();
+        $bill->path = $path;
+        $bill->save();
+
+        $billMachine = new BillMachine;
+        $billMachine->bill_id = $bill->id;
+        $billMachine->machine_id = $machine_id;
+        $billMachine->save();
+
+        return response()->json(['data' => ['url' => $path]]);
+    }
+
+    public function extendExpire(Request $request, $machineId)
+    {
+        $userId = auth()->user();
+        $errors = Validator::make($request->all(), [
+            'machine_id' => 'required',
+        ], [
+            'machine_id.required' => 'Machine ID is required.',
+        ])->errors();
+
+        $user = User::findOrFail($userId);
+        
+        if ($user->role !== User::ROLE_ADMIN) {
+            return $this->responseRequestError("Unauthorized", 403);
+        }
+
+        $machine = Machine::findOrFail($machineId);
+
+        $expireDate = new Carbon;
+        if (!is_null($machine->expire_date)) {
+            $expireDate = new Carbon($machine->expire_date);
+            $expireDate = $expireDate->addDays(29);
+        }
+
+        $machine->expire_date = $this->transformDateToDateTime($machine->expire_date);
+        $machine->save();
+
+        return $this->fractal->item($machine, new MachineTransformer());
     }
 }

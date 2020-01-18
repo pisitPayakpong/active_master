@@ -26,7 +26,8 @@ class App extends Component {
         const {
             title = "Basic Modal",
             renderContents,
-            width = "500px"
+            width = "500px",
+            textButton = "Show"
         } = this.props;
 
         const contents = renderContents ? renderContents() : "contents";
@@ -34,7 +35,7 @@ class App extends Component {
         return (
             <>
                 <Button type="primary" onClick={this.showModal}>
-                    Show
+                    {textButton}
                 </Button>
                 <Modal
                     title={title}

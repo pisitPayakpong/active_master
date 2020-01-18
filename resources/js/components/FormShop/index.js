@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { Form, Input, Tooltip, Icon, Button, Select, InputNumber } from "antd";
 import axios from "axios";
-import { map } from "lodash";
+import { map, toString } from "lodash";
 
 import Layout from "../Core/LayoutContent";
-import { openNotification, getOptionRole } from "../Core/utils";
+import { openNotification } from "../Core/utils";
+
+const ADMIN = "admin";
 
 class RegistrationForm extends Component {
     state = {
@@ -17,12 +19,17 @@ class RegistrationForm extends Component {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
+                const newValue = {
+                    ...values,
+                    users: toString(values?.users)
+                };
+
                 if (mode === "create") {
-                    this.handleCreareUser(values);
+                    this.handleCreareUser(newValue);
                 }
 
                 if (mode === "edit") {
-                    this.handleUpdateUser(values);
+                    this.handleUpdateUser(newValue);
                 }
                 // console.log("Received values of form: ", values);
             }
@@ -97,35 +104,41 @@ class RegistrationForm extends Component {
         });
     };
 
-    renderOption = () => {
-        return map(getOptionRole(), (role, key) => {
+    renderOption = data => {
+        return map(data, (d, key) => {
             return (
-                <Option value={role?.value} key={key}>
-                    {role?.text}
+                <Option value={d?.value} key={key}>
+                    {d?.text}
                 </Option>
             );
         });
     };
 
-    renderSelectRole = () => {
+    renderSelectUsers = () => {
         const { getFieldDecorator } = this.props.form;
-        const { data } = this.props;
+        const { userOptions, currentUser, data } = this.props;
+
         return (
-            <Form.Item label="Gender">
-                {getFieldDecorator("role", {
-                    initialValue: data?.role,
-                    rules: [
-                        {
-                            required: true,
-                            message: "Please select your Role!"
-                        }
-                    ]
-                })(
-                    <Select placeholder="Select a option and change input text above">
-                        {this.renderOption()}
-                    </Select>
-                )}
-            </Form.Item>
+            currentUser?.role === ADMIN && (
+                <Form.Item label="User">
+                    {getFieldDecorator("users", {
+                        initialValue: data?.userIds,
+                        rules: [
+                            {
+                                required: true,
+                                message: "Please select your Users!"
+                            }
+                        ]
+                    })(
+                        <Select
+                            mode="multiple"
+                            placeholder="Select a option and change input text above"
+                        >
+                            {this.renderOption(userOptions)}
+                        </Select>
+                    )}
+                </Form.Item>
+            )
         );
     };
 
@@ -213,6 +226,7 @@ class RegistrationForm extends Component {
                             />
                         )}
                     </Form.Item>
+                    {this.renderSelectUsers()}
                     <Form.Item {...tailFormItemLayout}>
                         <Button type="primary" htmlType="submit">
                             Submit
