@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Button, Row, Col } from "antd";
 import axios from "axios";
 
@@ -8,6 +9,9 @@ import Layout from "../Core/LayoutContent";
 import SelectorOption from "../Core/Selector";
 
 import { openNotification } from "../Core/utils";
+import { fetchCurrentUser } from "../User/duck/user";
+
+const ADMIN = "admin";
 
 class Machine extends Component {
     state = {
@@ -20,8 +24,10 @@ class Machine extends Component {
     };
 
     componentDidMount() {
+        const { fetchCurrentUser } = this.props;
         this.fetchOptionType();
         this.handleFetchShops();
+        fetchCurrentUser();
     }
 
     toggleCollapsed = () => {
@@ -110,6 +116,9 @@ class Machine extends Component {
     };
 
     render() {
+        const {
+            user: { currentUser }
+        } = this.props;
         const { step, data, options, shops, shopId } = this.state;
 
         return (
@@ -126,19 +135,22 @@ class Machine extends Component {
                                     />
                                 </Col>
                                 <Col span={8} style={{ textAlign: "right" }}>
-                                    <Button
-                                        type="primary"
-                                        onClick={() =>
-                                            this.handleSetStep("formCreate")
-                                        }
-                                    >
-                                        Create Machine
-                                    </Button>
+                                    {currentUser?.role === ADMIN && (
+                                        <Button
+                                            type="primary"
+                                            onClick={() =>
+                                                this.handleSetStep("formCreate")
+                                            }
+                                        >
+                                            Create Machine
+                                        </Button>
+                                    )}
                                 </Col>
                             </Row>
                         </Layout>
                         {shopId && (
                             <TableConfig
+                                currentUser={currentUser}
                                 shopId={shopId}
                                 handleSetStep={this.handleSetStep}
                                 handleFetchValue={this.handleFetchValue}
@@ -171,4 +183,8 @@ class Machine extends Component {
     }
 }
 
-export default Machine;
+const mapStateToProps = ({ user }) => {
+    return { user };
+};
+
+export default connect(mapStateToProps, { fetchCurrentUser })(Machine);

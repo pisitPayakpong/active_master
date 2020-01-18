@@ -33,7 +33,7 @@ class LayoutController extends Controller
         
         $imgUrl = auth()->user()->image;
 
-        $data = ['role' => auth()->user()->role, 'render_menu' => $renderMenu , 'imgUrl' => $imgUrl];
+        $data = ['user_id' => auth()->user()->id, 'role' => auth()->user()->role, 'render_menu' => $renderMenu , 'imgUrl' => $imgUrl];
         
         return view('main', ['viewState' => collect($data)]);
     }

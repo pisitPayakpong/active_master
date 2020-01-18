@@ -13,6 +13,11 @@ class Machine extends Model
         'lat', 'lng', 'machineID', 'user',
         'ip', 'cmd', 'stamp', 'sync',
         'hos_status', 'prog_version', 'debug', 'address',
-        'duration'
+        'duration', 'expire_date'
     ];
+
+    public function bills()
+    {
+        return $this->belongsToMany('App\Models\Bill');
+    }
 }

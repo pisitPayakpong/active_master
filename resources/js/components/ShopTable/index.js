@@ -6,6 +6,7 @@ import { map, filter, toString } from "lodash";
 import LayoutContent from "../Core/LayoutContent";
 import Modal from "../Core/Modal";
 import SimpleMap from "../Map/SimpleMap";
+import { confirmModal } from "../Core/ModalConfirm";
 
 class App extends Component {
     state = {
@@ -127,8 +128,13 @@ class App extends Component {
                             </Button>
                             <Button
                                 onClick={() => {
-                                    handleDelete(record?.id);
-                                    this.fetchData();
+                                    confirmModal({
+                                        title: "Do you have delete this shop ?",
+                                        callbackOk: () => {
+                                            handleDelete(record?.id);
+                                            this.fetchData();
+                                        }
+                                    });
                                 }}
                                 style={{
                                     backgroundColor: "#ff4d4f",

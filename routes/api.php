@@ -25,6 +25,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/', 'UserController@index');
             Route::post('/', 'UserController@store');
             Route::post('/login', 'UserController@login');
+            Route::get('/as_options', 'UserController@getOptions');
             Route::get('/{id}', 'UserController@show');
             Route::put('/{id}', 'UserController@update');
             Route::delete('/{id}', 'UserController@destroy');
@@ -42,10 +43,12 @@ Route::middleware('auth:api')->group(function () {
         Route::prefix('machine')->group(function () {
             Route::get('/', 'MachineController@index');
             Route::post('/', 'MachineController@store');
+            Route::post('/bill', 'MachineController@uploadFile');
             Route::get('/as_options', 'MachineController@getOptions');
             Route::get('/{id}', 'MachineController@show');
             Route::put('/{id}', 'MachineController@update');
             Route::delete('/{id}', 'MachineController@destroy');
+            Route::put('/{id}/expire', 'MachineController@extendExpire');
         });
     
         // Shop
@@ -66,6 +69,11 @@ Route::middleware('auth:api')->group(function () {
         // Image
         Route::prefix('image')->group(function () {
             Route::post('/', 'ImageController@create');
+        });
+
+        // File
+        Route::prefix('file')->group(function () {
+            Route::post('/', 'FileController@create');
         });
     });
 });

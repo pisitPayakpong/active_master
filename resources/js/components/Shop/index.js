@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Button } from "antd";
 import axios from "axios";
 
@@ -7,6 +8,9 @@ import FormShop from "../FormShop";
 import Layout from "../Core/LayoutContent";
 
 import { openNotification } from "../Core/utils";
+import { fetchCurrentUser, fetchOptionUsers } from "../User/duck/user";
+
+const ADMIN = "admin";
 
 class ShopContainer extends Component {
     state = {
@@ -16,6 +20,12 @@ class ShopContainer extends Component {
             shop: ""
         }
     };
+
+    componentDidMount() {
+        const { fetchCurrentUser, fetchOptionUsers } = this.props;
+        fetchCurrentUser();
+        fetchOptionUsers();
+    }
 
     toggleCollapsed = () => {
         this.setState({
@@ -66,9 +76,13 @@ class ShopContainer extends Component {
 
     render() {
         const {
+            user: { currentUser, userOptions }
+        } = this.props;
+        const {
             step,
             dataSource: { shop }
         } = this.state;
+
         return (
             <>
                 {step === "list" && (
@@ -78,12 +92,16 @@ class ShopContainer extends Component {
                             padding="15px 50px"
                             textAlign="right"
                         >
-                            <Button
-                                type="primary"
-                                onClick={() => this.handleSetStep("formCreate")}
-                            >
-                                Create Shop
-                            </Button>
+                            {currentUser?.role === ADMIN && (
+                                <Button
+                                    type="primary"
+                                    onClick={() =>
+                                        this.handleSetStep("formCreate")
+                                    }
+                                >
+                                    Create Shop
+                                </Button>
+                            )}
                         </Layout>
                         <ShopTable
                             handleSetStep={this.handleSetStep}
@@ -94,12 +112,16 @@ class ShopContainer extends Component {
                 )}
                 {step === "formCreate" && (
                     <FormShop
+                        currentUser={currentUser}
+                        userOptions={userOptions}
                         handleSetStep={this.handleSetStep}
                         mode="create"
                     />
                 )}
                 {step === "formEdit" && (
                     <FormShop
+                        currentUser={currentUser}
+                        userOptions={userOptions}
                         handleSetStep={this.handleSetStep}
                         mode="edit"
                         data={shop?.data}
@@ -110,4 +132,10 @@ class ShopContainer extends Component {
     }
 }
 
-export default ShopContainer;
+const mapStateToProps = ({ user }) => {
+    return { user };
+};
+
+export default connect(mapStateToProps, { fetchCurrentUser, fetchOptionUsers })(
+    ShopContainer
+);
