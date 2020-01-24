@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import GlassTable from "../GlassTable";
-import MachineTable from "../MachineTable";
 import CardComponent from "../Card";
 
 class DashboardContainer extends Component {

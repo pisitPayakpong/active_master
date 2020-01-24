@@ -4,15 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Response\FractalResponse;
+use App\Http\Traits\TraitsHelper;
 
 use App\Library\QueryHelper;
 use App\Models\Glass;
 use App\Transformer\GlassTransformer;
 
+use Carbon\Carbon;
 use DB;
 
 class GlassController extends Controller
 {
+    use TraitsHelper;
     const LIMIT_PER_PAGE = 10;
     const PAGE = 1;
 
@@ -178,6 +181,25 @@ class GlassController extends Controller
                 'price' => $result->sum_price
             ]
         ]);
+    }
+
+    public function getH2()
+    {
+        $query = DB::raw("SELECT  G.id
+        ,TIMESTAMPDIFF(SECOND, STR_TO_DATE(start_fill, '%Y-%m-%dT%H:%i:%sZ'), STR_TO_DATE(end_fill, '%Y-%m-%dT%H:%i:%sZ')) AS h2_usage,
+        DATE_FORMAT( G.end_fill, '%Y-%m-%d') as datetime
+        FROM glass as G
+        WHERE create_time <> '' AND finish_time <> ''
+        AND start_rinse <> '' AND end_rinse <> ''
+        AND start_fill <> '' AND end_fill <> ''
+        ");
+
+        $result = DB::select($query);
+
+        return collect($result)->map(function ($row) {
+            $row->datetime = $this->transformDateToDateTime($row->datetime);
+            return $row;
+        })->groupBy('datetime');
     }
 
     public function removeStdClass($result)

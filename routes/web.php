@@ -45,6 +45,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     // glass
     Route::get('/glass', 'LayoutController@index');
+
+    // report
+    Route::get('/report', 'LayoutController@index');
 });
 
 //Route for admin

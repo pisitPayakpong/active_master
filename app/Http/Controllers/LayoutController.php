@@ -28,7 +28,7 @@ class LayoutController extends Controller
         ];
 
         if (auth()->user()->isAdmin()) {
-            $renderMenu = array_merge($renderMenu, ['user', 'register']);
+            $renderMenu = array_merge($renderMenu, ['user', 'register', 'report']);
         }
         
         $imgUrl = auth()->user()->image;

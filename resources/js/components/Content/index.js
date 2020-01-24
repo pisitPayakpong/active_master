@@ -4,9 +4,9 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import User from "../User/UserContainer";
 import Dashboard from "../Dashboard";
 import Shop from "../Shop";
-import MachineTable from "../MachineTable";
 import Machine from "../Machine";
 import GlassTable from "../GlassTable";
+import ReportTable from "../ReportTable";
 
 class ContentRoute extends Component {
     state = {
@@ -21,7 +21,6 @@ class ContentRoute extends Component {
     };
 
     render() {
-        const { isLogin } = this.state;
         return (
             <Router>
                 <Route path="/dashboard">
@@ -38,6 +37,9 @@ class ContentRoute extends Component {
                 </Route>
                 <Route path="/glass">
                     <GlassTable />
+                </Route>
+                <Route path="/report">
+                    <ReportTable title="Report Glass" />
                 </Route>
                 {/* <Route path="/water">Water</Route> */}
             </Router>
