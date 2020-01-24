@@ -37,6 +37,7 @@ Route::middleware('auth:api')->group(function () {
         Route::prefix('glass')->group(function () {
             Route::get('/', 'GlassController@index');
             Route::get('/total_usage', 'GlassController@calculateTotalUsage');
+            Route::get('/h2', 'GlassController@getH2');
         });
     
         // machine
@@ -59,6 +60,12 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/{id}', 'ShopController@show');
             Route::put('/{id}', 'ShopController@update');
             Route::delete('/{id}', 'ShopController@destroy');
+        });
+
+        // Report
+        Route::prefix('report')->group(function () {
+            Route::get('/', 'ReportController@index');
+            Route::get('/downloadPdf', 'ReportController@downloadPdfV2')->name('report.downloadPdf');
         });
 
         // Province

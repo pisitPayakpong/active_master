@@ -20,7 +20,8 @@ const MENU_CONFIG = [
             { key: "user", title: "User", path: "/user" },
             { key: "shop", title: "Shop", path: "/shop" },
             { key: "machine", title: "Machine", path: "/machine" },
-            { key: "glass", title: "Glass", path: "/glass" }
+            { key: "glass", title: "Glass", path: "/glass" },
+            { key: "report", title: "Report", path: "/report" }
             // { key: "water", title: "water", path: "/water" }
         ]
     }
