@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Permission;
 
 class LayoutController extends Controller
 {
@@ -23,17 +24,15 @@ class LayoutController extends Controller
      */
     public function index()
     {
-        $renderMenu = [
-            'dashboard', 'water', 'shop', 'machine', 'glass'
-        ];
-
-        if (auth()->user()->isAdmin()) {
-            $renderMenu = array_merge($renderMenu, ['user', 'register', 'report']);
-        }
+        $renderMenu = Permission::where('type', auth()->user()->role)->first();
         
         $imgUrl = auth()->user()->image;
 
-        $data = ['user_id' => auth()->user()->id, 'role' => auth()->user()->role, 'render_menu' => $renderMenu , 'imgUrl' => $imgUrl];
+        $data = [
+            'user_id' => auth()->user()->id,
+            'role' => auth()->user()->role,
+            'render_menu' => !empty($renderMenu) ? $renderMenu->params['config_menu']: [],
+            'imgUrl' => $imgUrl];
         
         return view('main', ['viewState' => collect($data)]);
     }
