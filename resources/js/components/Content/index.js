@@ -7,6 +7,7 @@ import Shop from "../Shop";
 import Machine from "../Machine";
 import GlassTable from "../GlassTable";
 import ReportTable from "../ReportTable";
+import Profile from "../Profile";
 
 class ContentRoute extends Component {
     state = {
@@ -21,6 +22,7 @@ class ContentRoute extends Component {
     };
 
     render() {
+        const { userId } = this.props;
         return (
             <Router>
                 <Route path="/dashboard">
@@ -41,6 +43,7 @@ class ContentRoute extends Component {
                 <Route path="/report">
                     <ReportTable title="Report Glass" />
                 </Route>
+                <Route path="/profile/:id" component={Profile} />
                 {/* <Route path="/water">Water</Route> */}
             </Router>
         );

@@ -48,6 +48,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     // report
     Route::get('/report', 'LayoutController@index');
+
+    // profile
+    Route::get('/profile/{id}', 'LayoutController@index');
 });
 
 //Route for admin
