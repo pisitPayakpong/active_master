@@ -22,7 +22,6 @@ class ContentRoute extends Component {
     };
 
     render() {
-        const { userId } = this.props;
         return (
             <Router>
                 <Route path="/dashboard">
@@ -32,7 +31,7 @@ class ContentRoute extends Component {
                     <User />
                 </Route>
                 <Route path="/shop">
-                    <Shop />
+                    <Shop {...this.props} />
                 </Route>
                 <Route path="/machine">
                     <Machine />

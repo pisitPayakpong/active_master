@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { Button } from "antd";
 import axios from "axios";
 
@@ -8,7 +7,6 @@ import FormShop from "../FormShop";
 import Layout from "../Core/LayoutContent";
 
 import { openNotification } from "../Core/utils";
-import { fetchCurrentUser, fetchOptionUsers } from "../User/duck/user";
 
 const ADMIN = "admin";
 
@@ -18,14 +16,27 @@ class ShopContainer extends Component {
         step: "list", // list, form,
         dataSource: {
             shop: ""
-        }
+        },
+        userOptions: []
     };
 
     componentDidMount() {
-        const { fetchCurrentUser, fetchOptionUsers } = this.props;
-        fetchCurrentUser();
-        fetchOptionUsers();
+        this.fetchOptionUsers();
     }
+
+    fetchOptionUsers = () => {
+        axios({
+            url: `/api/test_v1/user/as_options`,
+            method: "get",
+
+            type: "json"
+        }).then(data => {
+            this.setState({
+                loading: false,
+                userOptions: data?.data?.data
+            });
+        });
+    };
 
     toggleCollapsed = () => {
         this.setState({
@@ -75,12 +86,11 @@ class ShopContainer extends Component {
     };
 
     render() {
-        const {
-            user: { currentUser, userOptions }
-        } = this.props;
+        const { role } = this.props;
         const {
             step,
-            dataSource: { shop }
+            dataSource: { shop },
+            userOptions
         } = this.state;
 
         return (
@@ -92,7 +102,7 @@ class ShopContainer extends Component {
                             padding="15px 50px"
                             textAlign="right"
                         >
-                            {currentUser?.role === ADMIN && (
+                            {role === ADMIN && (
                                 <Button
                                     type="primary"
                                     onClick={() =>
@@ -112,19 +122,21 @@ class ShopContainer extends Component {
                 )}
                 {step === "formCreate" && (
                     <FormShop
-                        currentUser={currentUser}
+                        // currentUser={currentUser}
                         userOptions={userOptions}
                         handleSetStep={this.handleSetStep}
                         mode="create"
+                        role={role}
                     />
                 )}
                 {step === "formEdit" && (
                     <FormShop
-                        currentUser={currentUser}
+                        // currentUser={currentUser}
                         userOptions={userOptions}
                         handleSetStep={this.handleSetStep}
                         mode="edit"
                         data={shop?.data}
+                        role={role}
                     />
                 )}
             </>
@@ -132,10 +144,4 @@ class ShopContainer extends Component {
     }
 }
 
-const mapStateToProps = ({ user }) => {
-    return { user };
-};
-
-export default connect(mapStateToProps, { fetchCurrentUser, fetchOptionUsers })(
-    ShopContainer
-);
+export default ShopContainer;

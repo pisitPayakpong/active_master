@@ -116,10 +116,10 @@ class RegistrationForm extends Component {
 
     renderSelectUsers = () => {
         const { getFieldDecorator } = this.props.form;
-        const { userOptions, currentUser, data } = this.props;
+        const { userOptions, data, role } = this.props;
 
         return (
-            currentUser?.role === ADMIN && (
+            role === ADMIN && (
                 <Form.Item label="User">
                     {getFieldDecorator("users", {
                         initialValue: data?.userIds,

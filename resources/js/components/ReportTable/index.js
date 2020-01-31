@@ -121,7 +121,6 @@ class Barchart extends Component {
                 render: report => (
                     <a
                         onClick={() => {
-                            console.log({ report });
                             this.downloadReport(report?.id);
                         }}
                     >
