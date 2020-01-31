@@ -34,7 +34,7 @@ class ContentRoute extends Component {
                     <Shop {...this.props} />
                 </Route>
                 <Route path="/machine">
-                    <Machine />
+                    <Machine {...this.props} />
                 </Route>
                 <Route path="/glass">
                     <GlassTable />

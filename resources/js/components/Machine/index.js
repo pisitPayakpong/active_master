@@ -116,9 +116,7 @@ class Machine extends Component {
     };
 
     render() {
-        const {
-            user: { currentUser }
-        } = this.props;
+        const { role } = this.props;
         const { step, data, options, shops, shopId } = this.state;
 
         return (
@@ -135,7 +133,7 @@ class Machine extends Component {
                                     />
                                 </Col>
                                 <Col span={8} style={{ textAlign: "right" }}>
-                                    {currentUser?.role === ADMIN && (
+                                    {role === ADMIN && (
                                         <Button
                                             type="primary"
                                             onClick={() =>
@@ -150,7 +148,7 @@ class Machine extends Component {
                         </Layout>
                         {shopId && (
                             <TableConfig
-                                currentUser={currentUser}
+                                role={role}
                                 shopId={shopId}
                                 handleSetStep={this.handleSetStep}
                                 handleFetchValue={this.handleFetchValue}

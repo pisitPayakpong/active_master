@@ -253,7 +253,7 @@ class App extends Component {
             handleSetStep,
             handleFetchValue,
             handleDelete,
-            currentUser: { role }
+            role
         } = this.props;
         const { data, loading, pagination, options } = this.state;
 
