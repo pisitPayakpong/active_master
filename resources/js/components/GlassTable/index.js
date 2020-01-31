@@ -27,12 +27,13 @@ class App extends Component {
     handleTableChange = (pagination, filters, sorter) => {
         const pager = { ...this.state.pagination };
         pager.current = pagination.current;
+
         this.setState({
             pagination: pager
         });
 
         this.fetchData({
-            results: pagination.pageSize,
+            limit: pagination.pageSize,
             page: pagination.current,
             sort: `${this.getSymbolOrder(sorter.order)}${sorter.field}`,
             // sortOrder: sorter.order,
@@ -176,7 +177,7 @@ class App extends Component {
                     pagination={pagination}
                     loading={loading}
                     onChange={this.handleTableChange}
-                    scroll={{ x: 1500, y: 1000 }}
+                    scroll={{ x: 1500 }}
                 />
             </LayoutContent>
         );

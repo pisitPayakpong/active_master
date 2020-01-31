@@ -37,7 +37,7 @@ class App extends Component {
         });
 
         this.fetchData({
-            results: pagination.pageSize,
+            limit: pagination.pageSize,
             page: pagination.current,
             sortField: sorter.field,
             sortOrder: sorter.order,
@@ -72,7 +72,8 @@ class App extends Component {
                 data: data?.data,
                 pagination: {
                     current: current_page,
-                    total: total
+                    total: total,
+                    showSizeChanger: true
                 }
             });
         });
