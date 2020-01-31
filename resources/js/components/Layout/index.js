@@ -38,7 +38,8 @@ class NavBar extends Component {
             openKeys,
             imgUrl: authMenus?.imgUrl,
             menuConfigs: authMenus?.render_menu,
-            userId: authMenus?.user_id
+            userId: authMenus?.user_id,
+            role: authMenus?.role
         });
     }
 
