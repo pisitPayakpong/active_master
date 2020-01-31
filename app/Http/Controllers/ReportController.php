@@ -137,7 +137,6 @@ class ReportController extends Controller
             'id' => 'required',
         ], [
             'id.required' => 'ID is required.',
-
         ])->errors();
 
 
@@ -146,43 +145,8 @@ class ReportController extends Controller
         }
 
         $report = Report::findOrFail($params['id']);
-
-        // This  $data array will be passed to our PDF blade
-        $data = [
-          'title' => "$report->id Type $report->type",
-          'heading' => "Hello from $report->datetime",
-          'content' => "$report->type"
-        ];
-        
-        $filename = $report->id.'_'.$report->type.'_'.$report->datetime;
-        $pdf = PDF::loadView('reports.pdf_view', $data);
-        $headers = [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="'.$filename.'"'
-        ];
-
-        return response($pdf->download('pdf_view.reports'), 200, $headers);
-    }
-
-
-    public function downloadPdfV2(Request $request)
-    {
-        $params = $request->all();
-        $errors = Validator::make($params, [
-            'id' => 'required',
-        ], [
-            'id.required' => 'ID is required.',
-
-        ])->errors();
-
-
-        if ($errors->isNotEmpty()) {
-            return $this->responseRequestError($errors->first(), 422);
-        }
-
-        $report = Report::findOrFail($params['id']);
-        $reportEngine = new ReportEngineFactory();
-        $reportEngine = $reportEngine->create($report);
+        $reportEngineFactory = new ReportEngineFactory();
+        $reportEngine = $reportEngineFactory->create($report);
 
         return $reportEngine->getReport($report);
     }
