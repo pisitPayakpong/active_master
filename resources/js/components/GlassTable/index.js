@@ -112,46 +112,55 @@ class App extends Component {
             {
                 title: "id",
                 dataIndex: "id",
-                sorter: true
+                sorter: true,
+                width: "10%"
             },
             {
                 title: "sn",
                 dataIndex: "sn",
-                sorter: true
+                sorter: true,
+                width: "10%"
             },
             {
                 title: "image",
                 dataIndex: "image",
-                render: image => this.renderImage(image)
+                render: image => this.renderImage(image),
+                width: "10%"
             },
             {
                 title: "user",
                 dataIndex: "user",
-                sorter: true
+                sorter: true,
+                width: "10%"
             },
             {
                 title: "date",
                 dataIndex: "date",
-                sorter: true
+                sorter: true,
+                width: "20%"
             },
             {
                 title: "o3 usage",
                 dataIndex: "o3_usage",
-                sorter: true
+                sorter: true,
+                width: "10%"
             },
             {
                 title: "h2 usage",
                 dataIndex: "h2_usage",
-                sorter: true
+                sorter: true,
+                width: "10%"
             },
             {
                 title: "price",
                 dataIndex: "price",
-                sorter: true
+                sorter: true,
+                width: "10%"
             },
             {
                 title: "Action",
-                render: () => <Modal />
+                render: () => <Modal />,
+                width: "10%"
             }
         ];
 

@@ -65,7 +65,7 @@ Route::middleware('auth:api')->group(function () {
         // Report
         Route::prefix('report')->group(function () {
             Route::get('/', 'ReportController@index');
-            Route::get('/downloadPdf', 'ReportController@downloadPdfV2')->name('report.downloadPdf');
+            Route::get('/downloadPdf', 'ReportController@downloadPdf')->name('report.downloadPdf');
         });
 
         // Province
