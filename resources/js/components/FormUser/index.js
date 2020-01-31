@@ -360,7 +360,7 @@ class RegistrationForm extends Component {
                         }
                     >
                         {getFieldDecorator("tel", {
-                            initialValue: data?.name,
+                            initialValue: data?.tel,
                             rules: [
                                 {
                                     required: true,

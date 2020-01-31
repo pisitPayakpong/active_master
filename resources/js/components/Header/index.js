@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Button, Row, Col, Menu, Icon } from "antd";
+import { Button, Row, Col, Menu, Icon, Avatar, Badge } from "antd";
 import styled from "styled-components";
+import FormUser from "../FormUser";
 
 const StyledColLeft = styled(Col)`
     text-align: left;
@@ -10,9 +11,15 @@ const StyledColRight = styled(Col)`
     text-align: right;
 `;
 
+const StyledAvatar = styled(Avatar)`
+    margin-right: 10px;
+    cursor: pointer;
+`;
+
 class App extends Component {
     render() {
         const { toggleCollapsed, collapsed } = this.props;
+
         return (
             <Menu
                 // theme="dark"
@@ -38,6 +45,18 @@ class App extends Component {
                         </Button>
                     </StyledColLeft>
                     <StyledColRight xs={12}>
+                        <span>
+                            <Badge>
+                                <StyledAvatar
+                                    shape="square"
+                                    icon="user"
+                                    onClick={() => {
+                                        const { userId } = this.props;
+                                        window.location.href = `/profile/${userId}`;
+                                    }}
+                                />
+                            </Badge>
+                        </span>
                         <Button
                             type="primary"
                             htmlType="submit"

@@ -24,6 +24,24 @@ class NavBar extends Component {
         });
     };
 
+    componentDidMount() {
+        let pathname = window.location.pathname;
+        const current = pathname.substring(1).replace("/", "_");
+        let openKeys = ["0"];
+
+        const authMenus = JSON.parse(
+            document.getElementById("initial-state").innerHTML
+        );
+
+        this.setState({
+            current,
+            openKeys,
+            imgUrl: authMenus?.imgUrl,
+            menuConfigs: authMenus?.render_menu,
+            userId: authMenus?.user_id
+        });
+    }
+
     render() {
         const { collapsed } = this.state;
         if (!this.state.jwt_token) {
@@ -46,6 +64,7 @@ class NavBar extends Component {
                             <Header
                                 collapsed={collapsed}
                                 toggleCollapsed={this.toggleCollapsed}
+                                {...this.state}
                             />
                             <Content style={{ padding: "0 24px 24px" }}>
                                 <Breadcrumb style={{ margin: "16px 0" }}>
@@ -53,7 +72,7 @@ class NavBar extends Component {
                                     <Breadcrumb.Item>List</Breadcrumb.Item>
                                     <Breadcrumb.Item>App</Breadcrumb.Item>
                                 </Breadcrumb>
-                                <ContentRoute />
+                                <ContentRoute {...this.state} />
                             </Content>
                         </Layout>
                     </Layout>
