@@ -27,7 +27,7 @@ class App extends Component {
         });
 
         this.fetchData({
-            results: pagination.pageSize,
+            limit: pagination.pageSize,
             page: pagination.current,
             sort: `${this.getSymbolOrder(sorter.order)}${sorter.field}`,
             ...filters
@@ -65,7 +65,8 @@ class App extends Component {
                 data: data?.data,
                 pagination: {
                     current: current_page,
-                    total: total
+                    total: total,
+                    showSizeChanger: true
                 }
             });
         });
@@ -160,7 +161,7 @@ class App extends Component {
                     pagination={pagination}
                     loading={loading}
                     onChange={this.handleTableChange}
-                    scroll={{ x: 1500, y: 1000 }}
+                    scroll={{ x: 1500 }}
                 />
             </LayoutContent>
         );

@@ -28,7 +28,7 @@ class Barchart extends Component {
         });
 
         this.fetchData({
-            results: pagination.pageSize,
+            limit: pagination.pageSize,
             page: pagination.current,
             sort: `${this.getSymbolOrder(sorter.order)}${sorter.field}`,
             // sortOrder: sorter.order,
@@ -145,7 +145,7 @@ class Barchart extends Component {
                         pagination={pagination}
                         loading={loading}
                         onChange={this.handleTableChange}
-                        scroll={{ x: 1500, y: 1000 }}
+                        scroll={{ x: 1500 }}
                     />
                 </LayoutContent>
             </>

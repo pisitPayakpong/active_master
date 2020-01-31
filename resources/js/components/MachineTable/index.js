@@ -53,7 +53,7 @@ class App extends Component {
         const typeFilter = toString(filters?.type);
 
         this.fetchData({
-            results: pagination.pageSize,
+            limit: pagination.pageSize,
             page: pagination.current,
             sort: `${this.getSymbolOrder(sorter.order)}${sorter.field}`,
             type: typeFilter
